@@ -452,7 +452,7 @@ export struct ProfileTab {
                     .fontSize(12)
                     .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
 
-                  Text('设计语言: Apple Liquid Glass + 东方花语美学')
+                  Text('设计语言: 琉璃微透拟态 + 东方花语美学')
                     .fontSize(12)
                     .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
 

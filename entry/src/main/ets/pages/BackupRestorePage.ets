@@ -19,22 +19,30 @@ struct BackupRestorePage {
 
   private handleImport(): void {
     if (!this.importJsonString.trim()) {
-      promptAction.showToast({ message: '请先粘贴待导入的 JSON 数据' });
+      try {
+        promptAction.showToast({ message: '请先粘贴待导入的 JSON 数据' });
+      } catch (e) {}
       return;
     }
 
     const success = StorageService.getInstance().importDataFromJson(this.importJsonString);
     if (success) {
-      promptAction.showToast({ message: '数据恢复成功！' });
+      try {
+        promptAction.showToast({ message: '数据恢复成功！' });
+      } catch (e) {}
       router.back();
     } else {
-      promptAction.showToast({ message: 'JSON 格式解析失败，请检查数据完整性' });
+      try {
+        promptAction.showToast({ message: 'JSON 格式解析失败，请检查数据完整性' });
+      } catch (e) {}
     }
   }
 
   private handleReset(): void {
     StorageService.getInstance().resetToSampleData();
-    promptAction.showToast({ message: '已重置为示范花草与日记数据' });
+    try {
+      promptAction.showToast({ message: '已重置为示范花草与日记数据' });
+    } catch (e) {}
     router.back();
   }
 

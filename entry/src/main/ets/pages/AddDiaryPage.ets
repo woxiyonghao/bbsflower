@@ -64,7 +64,9 @@ struct AddDiaryPage {
 
   private submit(): void {
     if (this.title.trim().length === 0) {
-      promptAction.showToast({ message: '请填写日记标题' });
+      try {
+        promptAction.showToast({ message: '请填写日记标题' });
+      } catch (e) {}
       return;
     }
 

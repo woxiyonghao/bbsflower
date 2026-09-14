@@ -41,10 +41,14 @@ struct SpeciesDetailPage {
 
   private addToGarden(): void {
     if (this.species) {
-      router.replaceUrl({
-        url: 'pages/AddPlantPage',
-        params: { presetSpecies: this.species }
-      });
+      try {
+        router.replaceUrl({
+          url: 'pages/AddPlantPage',
+          params: { presetSpecies: this.species }
+        });
+      } catch (e) {
+        // Safe catch
+      }
     }
   }
 
