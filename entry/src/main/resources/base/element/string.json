@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "琉璃花语 - 鸿蒙原生免费单机养花日记应用"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "以琉璃为器，以花语为引。守护你的绿意时光"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "琉璃花语"
+    }
+  ]
+}

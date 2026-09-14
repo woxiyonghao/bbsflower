@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>琉璃花语 · 鸿蒙原生免费单机养花日记应用</title>
+  <style>
+    /* ============ 亮色模式变量（花语柔光） ============ */
+    :root {
+      --gold: #C9A96E;
+      --gold-deep: #A8874A;
+      --gold-light: #F5E8D0;
+      --violet: #8B7AB8;
+      --violet-deep: #5E4A8C;
+      --petal: #E8A0BF;
+      --leaf: #5BA88A;
+      --mint: #7BC4A8;
+
+      --bg-1: #FBF7F2;
+      --bg-2: #F5F0FA;
+      --bg-3: #FDF9F3;
+
+      --orb-1: rgba(201, 169, 110, 0.26);
+      --orb-2: rgba(139, 122, 184, 0.20);
+      --orb-3: rgba(232, 160, 191, 0.22);
+      --orb-4: rgba(123, 196, 168, 0.20);
+      --orb-body-1: rgba(232, 200, 138, 0.85);
+      --orb-body-2: rgba(160, 140, 220, 0.65);
+
+      --glass-bg: rgba(255, 255, 255, 0.48);
+      --glass-bg-strong: rgba(255, 255, 255, 0.64);
+      --glass-bg-soft: rgba(255, 255, 255, 0.56);
+      --glass-border: rgba(255, 255, 255, 0.78);
+      --glass-highlight: rgba(255, 255, 255, 0.58);
+      --glass-inner-shadow: rgba(255, 255, 255, 0.88);
+      --glass-stripe: rgba(255, 255, 255, 0.38);
+
+      --text-main: #2D2A3F;
+      --text-heading: #1F1B33;
+      --text-muted: #6B6780;
+      --text-soft: #8E8AA3;
+
+      --divider: rgba(255, 255, 255, 0.5);
+      --row-hover: rgba(255, 255, 255, 0.42);
+
+      --shadow-glass:
+        0 12px 40px rgba(90, 70, 140, 0.10),
+        0 2px 8px rgba(90, 70, 140, 0.06),
+        inset 0 1px 1px rgba(255, 255, 255, 0.85),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.35);
+      --shadow-glass-hover:
+        0 20px 56px rgba(90, 70, 140, 0.16),
+        0 4px 12px rgba(90, 70, 140, 0.08),
+        inset 0 1px 2px rgba(255, 255, 255, 0.95),
+        inset 0 -1px 1px rgba(255, 255, 255, 0.45);
+      --glow-gold: 0 0 32px rgba(201, 169, 110, 0.35);
+      --glow-petal: 0 0 28px rgba(232, 160, 191, 0.30);
+
+      --table-th-bg-1: rgba(253, 240, 220, 0.85);
+      --table-th-bg-2: rgba(245, 232, 208, 0.7);
+      --table-th-text: #7B5B1E;
+
+      --code-bg: rgba(255, 255, 255, 0.7);
+      --code-text: #A8874A;
+
+      --badge-gold-bg: linear-gradient(135deg, rgba(253, 240, 220, 0.95), rgba(245, 232, 208, 0.8));
+      --badge-gold-text: #8B6914;
+      --badge-violet-bg: linear-gradient(135deg, rgba(244, 240, 255, 0.95), rgba(230, 220, 250, 0.8));
+      --badge-violet-text: #5E4A8C;
+      --badge-green-bg: linear-gradient(135deg, rgba(230, 255, 250, 0.95), rgba(210, 245, 238, 0.8));
+      --badge-green-text: #234E52;
+      --badge-blue-bg: linear-gradient(135deg, rgba(235, 248, 255, 0.95), rgba(215, 235, 252, 0.8));
+      --badge-blue-text: #2B6CB0;
+      --badge-petal-bg: linear-gradient(135deg, rgba(255, 235, 245, 0.95), rgba(252, 220, 235, 0.8));
+      --badge-petal-text: #9B4A6E;
+
+      --icon-gold-bg: linear-gradient(135deg, #FDF0DC, #F5E0B8);
+      --icon-violet-bg: linear-gradient(135deg, #F0EBFA, #E2D8F5);
+      --icon-blue-bg: linear-gradient(135deg, #E8F3FC, #D5E7F7);
+      --icon-green-bg: linear-gradient(135deg, #E4FAF4, #CDEEE5);
+      --icon-petal-bg: linear-gradient(135deg, #FDF0F5, #F8DCE8);
+
+      --hero-title-1: #2D2A3F;
+      --hero-title-2: #8B7AB8;
+
+      --icon-app-bg:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9) 0%, transparent 45%),
+        linear-gradient(140deg, #2B1B4A 0%, #1A0F2E 55%, #3D2660 100%);
+    }
+
+    /* ============ 深色模式变量（鸿蒙深色主题自动适配） ============ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --gold: #D4B87E;
+        --gold-deep: #B8985E;
+        --gold-light: #3A2E1A;
+        --violet: #A696D0;
+        --violet-deep: #7862B0;
+        --petal: #E8A0BF;
+        --leaf: #6BC4A0;
+        --mint: #8AD4B8;
+
+        --bg-1: #0F0D1A;
+        --bg-2: #161125;
+        --bg-3: #1A1430;
+
+        --orb-1: rgba(201, 169, 110, 0.18);
+        --orb-2: rgba(139, 122, 184, 0.20);
+        --orb-3: rgba(232, 160, 191, 0.14);
+        --orb-4: rgba(123, 196, 168, 0.12);
+        --orb-body-1: rgba(201, 169, 110, 0.50);
+        --orb-body-2: rgba(120, 100, 190, 0.50);
+
+        --glass-bg: rgba(255, 255, 255, 0.055);
+        --glass-bg-strong: rgba(255, 255, 255, 0.08);
+        --glass-bg-soft: rgba(255, 255, 255, 0.07);
+        --glass-border: rgba(255, 255, 255, 0.14);
+        --glass-highlight: rgba(255, 255, 255, 0.10);
+        --glass-inner-shadow: rgba(255, 255, 255, 0.18);
+        --glass-stripe: rgba(255, 255, 255, 0.08);
+
+        --text-main: #DCD8EA;
+        --text-heading: #F2EFF9;
+        --text-muted: #A29DC0;
+        --text-soft: #736F90;
+
+        --divider: rgba(255, 255, 255, 0.08);
+        --row-hover: rgba(255, 255, 255, 0.05);
+
+        --shadow-glass:
+          0 12px 40px rgba(0, 0, 0, 0.45),
+          0 2px 8px rgba(0, 0, 0, 0.25),
+          inset 0 1px 1px rgba(255, 255, 255, 0.18),
+          inset 0 -1px 1px rgba(255, 255, 255, 0.04);
+        --shadow-glass-hover:
+          0 20px 56px rgba(0, 0, 0, 0.55),
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.22),
+          inset 0 -1px 1px rgba(255, 255, 255, 0.06);
+        --glow-gold: 0 0 40px rgba(212, 184, 126, 0.22);
+        --glow-petal: 0 0 32px rgba(232, 160, 191, 0.18);
+
+        --table-th-bg-1: rgba(212, 184, 126, 0.14);
+        --table-th-bg-2: rgba(212, 184, 126, 0.08);
+        --table-th-text: #E4CC94;
+
+        --code-bg: rgba(255, 255, 255, 0.06);
+        --code-text: #E4CC94;
+
+        --badge-gold-bg: linear-gradient(135deg, rgba(212, 184, 126, 0.16), rgba(212, 184, 126, 0.08));
+        --badge-gold-text: #E4CC94;
+        --badge-violet-bg: linear-gradient(135deg, rgba(166, 150, 208, 0.18), rgba(166, 150, 208, 0.08));
+        --badge-violet-text: #C4B4EE;
+        --badge-green-bg: linear-gradient(135deg, rgba(110, 220, 200, 0.16), rgba(110, 220, 200, 0.06));
+        --badge-green-text: #8EE0D0;
+        --badge-blue-bg: linear-gradient(135deg, rgba(120, 180, 240, 0.16), rgba(120, 180, 240, 0.06));
+        --badge-blue-text: #9CC8F0;
+        --badge-petal-bg: linear-gradient(135deg, rgba(232, 160, 191, 0.16), rgba(232, 160, 191, 0.06));
+        --badge-petal-text: #F0B8D0;
+
+        --icon-gold-bg: linear-gradient(135deg, rgba(212, 184, 126, 0.22), rgba(212, 184, 126, 0.08));
+        --icon-violet-bg: linear-gradient(135deg, rgba(166, 150, 208, 0.22), rgba(166, 150, 208, 0.08));
+        --icon-blue-bg: linear-gradient(135deg, rgba(120, 180, 240, 0.20), rgba(120, 180, 240, 0.06));
+        --icon-green-bg: linear-gradient(135deg, rgba(110, 220, 200, 0.20), rgba(110, 220, 200, 0.06));
+        --icon-petal-bg: linear-gradient(135deg, rgba(232, 160, 191, 0.20), rgba(232, 160, 191, 0.06));
+
+        --hero-title-1: #F2EFF9;
+        --hero-title-2: #C4B4EE;
+
+        --icon-app-bg:
+          radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.18) 0%, transparent 45%),
+          linear-gradient(140deg, #2B1B4A 0%, #140A24 60%, #3D2660 100%);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root { --radius-xl: 32px; --radius-lg: 24px; --radius-md: 18px; --radius-sm: 12px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding-bottom: 100px;
+      position: relative;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 10%, var(--orb-1) 0%, transparent 42%),
+        radial-gradient(circle at 85% 15%, var(--orb-2) 0%, transparent 45%),
+        radial-gradient(circle at 25% 80%, var(--orb-3) 0%, transparent 50%),
+        radial-gradient(circle at 90% 85%, var(--orb-4) 0%, transparent 45%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+      background-attachment: fixed;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+      transition: background 0.5s ease;
+    }
+    body::before {
+      top: -120px; left: -80px; width: 380px; height: 380px;
+      background: radial-gradient(circle, var(--orb-body-1), transparent 70%);
+    }
+    body::after {
+      bottom: -160px; right: -100px; width: 460px; height: 460px;
+      background: radial-gradient(circle, var(--orb-body-2), transparent 70%);
+    }
+
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ============ 通用玻璃卡片 ============ */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-glass);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+    .glass::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(180deg, var(--glass-highlight), transparent);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      pointer-events: none;
+    }
+    .glass::after {
+      content: "";
+      position: absolute;
+      top: -60%; left: -30%;
+      width: 60%; height: 200%;
+      background: linear-gradient(115deg, transparent 0%, var(--glass-stripe) 45%, transparent 60%);
+      transform: rotate(8deg);
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* ============ HERO ============ */
+    .hero { padding: 56px 0 48px; position: relative; }
+    .hero-card {
+      padding: 40px 44px;
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      background: var(--glass-bg-strong);
+    }
+    .app-icon-wrap { position: relative; flex-shrink: 0; }
+    .app-icon {
+      width: 128px; height: 128px; border-radius: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 66px;
+      background: var(--icon-app-bg);
+      box-shadow:
+        0 24px 48px rgba(60, 40, 110, 0.35),
+        0 0 0 4px var(--glass-border),
+        0 0 0 5px rgba(201, 169, 110, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .app-icon:hover { transform: translateY(-4px) scale(1.04) rotate(-3deg); }
+    .app-icon::after {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 225, 170, 0.55) 0%, transparent 65%);
+      filter: blur(8px);
+      animation: breathe 4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.12); }
+    }
+    .app-icon span { position: relative; z-index: 2; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
+
+    .badge-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 13px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.2px;
+      background: var(--glass-bg-soft);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 2px 8px rgba(90, 70, 140, 0.06), inset 0 1px 0 var(--glass-inner-shadow);
+      color: var(--text-muted);
+      transition: all 0.5s ease;
+    }
+    .badge-gold { color: var(--badge-gold-text); background: var(--badge-gold-bg); }
+    .badge-violet { color: var(--badge-violet-text); background: var(--badge-violet-bg); }
+    .badge-green { color: var(--badge-green-text); background: var(--badge-green-bg); }
+    .badge-blue { color: var(--badge-blue-text); background: var(--badge-blue-bg); }
+    .badge-petal { color: var(--badge-petal-text); background: var(--badge-petal-bg); }
+    .badge-free {
+      background: linear-gradient(135deg, #FFD86E, #FF9F5C);
+      color: #7A3A00;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(255, 159, 92, 0.35), inset 0 1px 0 rgba(255,255,255,0.6);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .hero-title {
+      font-size: 38px; font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, var(--hero-title-1) 30%, var(--hero-title-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 16px; color: var(--text-muted);
+      max-width: 720px; line-height: 1.6;
+    }
+
+    /* ============ 导航 ============ */
+    .nav-bar {
+      position: sticky; top: 16px; z-index: 100;
+      margin: 0 auto 32px;
+      max-width: 1160px;
+      padding: 0 24px;
+    }
+    .nav-inner {
+      display: flex; gap: 6px; overflow-x: auto;
+      padding: 10px 14px;
+      border-radius: 22px;
+      background: var(--glass-bg-soft);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-glass);
+      scrollbar-width: none;
+      transition: background 0.5s ease;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      padding: 9px 18px; border-radius: 14px; border: none;
+      background: transparent; color: var(--text-muted);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all 0.25s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .nav-btn:hover { color: var(--text-heading); background: var(--glass-bg); }
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #FFFFFF;
+      box-shadow: 0 6px 18px rgba(201, 169, 110, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    /* ============ 章节 ============ */
+    .section { margin-top: 56px; }
+    .section-header { margin-bottom: 26px; padding-left: 4px; }
+    .section-tag {
+      font-size: 12px; font-weight: 700; color: var(--gold-deep);
+      text-transform: uppercase; letter-spacing: 1.6px; margin-bottom: 6px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .section-tag::before {
+      content: ""; width: 20px; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      border-radius: 2px;
+    }
+    .section-title {
+      font-size: 28px; font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.3px;
+    }
+
+    /* ============ 卡片网格 ============ */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 24px 26px;
+      border-radius: var(--radius-lg);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.35s ease,
+                  border-color 0.35s ease,
+                  background 0.5s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-glass-hover);
+      border-color: rgba(201, 169, 110, 0.5);
+    }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 16px;
+      background: var(--glass-bg-soft);
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 1px 0 var(--glass-inner-shadow), 0 4px 12px rgba(90,70,140,0.06);
+      position: relative;
+      z-index: 1;
+      transition: background 0.5s ease;
+    }
+    .card-icon.gold { background: var(--icon-gold-bg); }
+    .card-icon.violet { background: var(--icon-violet-bg); }
+    .card-icon.blue { background: var(--icon-blue-bg); }
+    .card-icon.green { background: var(--icon-green-bg); }
+    .card-icon.petal { background: var(--icon-petal-bg); }
+
+    .card-title {
+      font-size: 17px; font-weight: 700;
+      margin-bottom: 8px; color: var(--text-heading);
+      position: relative; z-index: 1;
+    }
+    .card-desc {
+      font-size: 14px; color: var(--text-muted);
+      line-height: 1.65;
+      position: relative; z-index: 1;
+    }
+
+    /* ============ 高亮面板 ============ */
+    .highlight-panel {
+      padding: 36px 40px;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 20% 20%, var(--orb-1) 0%, transparent 55%),
+        radial-gradient(circle at 85% 80%, var(--orb-2) 0%, transparent 55%),
+        var(--glass-bg-soft);
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-glass), var(--glow-gold);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
+    .highlight-panel::before {
+      content: "";
+      position: absolute;
+      top: -80%; left: -20%;
+      width: 50%; height: 260%;
+      background: linear-gradient(115deg, transparent, var(--glass-stripe) 45%, transparent 60%);
+      transform: rotate(10deg);
+      pointer-events: none;
+    }
+    .highlight-title {
+      font-size: 22px; font-weight: 800;
+      color: var(--text-heading); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .highlight-sub {
+      font-size: 14px; color: var(--text-muted); margin-bottom: 24px;
+      position: relative; z-index: 1;
+    }
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; position: relative; z-index: 1;
+    }
+    .highlight-item {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: var(--glass-bg-strong);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 var(--glass-inner-shadow), 0 4px 14px rgba(90,70,140,0.06);
+      transition: background 0.5s ease;
+    }
+    .highlight-item .hi-icon { font-size: 24px; margin-bottom: 8px; }
+    .highlight-item .hi-title { font-size: 15px; font-weight: 700; color: var(--text-heading); margin-bottom: 4px; }
+    .highlight-item .hi-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ============ 表格 ============ */
+    .table-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--glass-bg-soft);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-glass);
+      transition: background 0.5s ease;
+    }
+    .arch-table { width: 100%; border-collapse: collapse; }
+    .arch-table th, .arch-table td {
+      padding: 16px 22px; text-align: left;
+      font-size: 14px;
+      border-bottom: 1px solid var(--divider);
+    }
+    .arch-table th {
+      background: linear-gradient(135deg, var(--table-th-bg-1), var(--table-th-bg-2));
+      color: var(--table-th-text); font-weight: 700;
+      font-size: 13px; letter-spacing: 0.3px;
+      transition: background 0.5s ease;
+    }
+    .arch-table tbody tr { transition: background 0.2s ease; }
+    .arch-table tbody tr:hover { background: var(--row-hover); }
+    .arch-table tr:last-child td { border-bottom: none; }
+
+    code {
+      background: var(--code-bg);
+      padding: 3px 8px; border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px; color: var(--code-text);
+      border: 1px solid var(--glass-border);
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    /* ============ 版本卡 ============ */
+    .version-card {
+      padding: 24px 26px;
+      border-radius: var(--radius-lg);
+    }
+    .version-tag {
+      display: inline-flex; align-items: center;
+      padding: 5px 12px; border-radius: 10px;
+      font-size: 12px; font-weight: 700; margin-bottom: 12px;
+      background: var(--glass-bg-soft);
+      border: 1px solid var(--glass-border);
+      color: var(--gold-deep);
+      letter-spacing: 0.3px;
+      box-shadow: inset 0 1px 0 var(--glass-inner-shadow);
+      transition: all 0.5s ease;
+    }
+    .version-tag.current {
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #FFFFFF;
+      border-color: transparent;
+      box-shadow: 0 6px 16px rgba(201, 169, 110, 0.35);
+    }
+
+    /* ============ 页脚 ============ */
+    .footer {
+      margin-top: 72px;
+      padding: 32px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* ============ 浮动按钮 ============ */
+    .floating-actions {
+      position: fixed; bottom: 24px; right: 24px;
+      display: flex; gap: 12px; z-index: 999;
+    }
+    .fab {
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #FFFFFF; border: 1px solid rgba(255,255,255,0.4);
+      padding: 13px 26px; border-radius: 18px;
+      font-size: 14px; font-weight: 700;
+      box-shadow: 0 12px 32px rgba(201, 169, 110, 0.45),
+                  inset 0 1px 0 rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+      font-family: inherit;
+    }
+    .fab:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 40px rgba(201, 169, 110, 0.55),
+                  inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    @media (max-width: 720px) {
+      .hero-card { padding: 28px 24px; flex-direction: column; text-align: center; gap: 20px; }
+      .hero-title { font-size: 28px; justify-content: center; }
+      .hero-content { text-align: center; }
+      .badge-bar { justify-content: center; }
+      .app-icon { width: 108px; height: 108px; font-size: 54px; }
+      .highlight-panel { padding: 26px 22px; }
+      .arch-table th, .arch-table td { padding: 12px 14px; font-size: 13px; }
+    }
+
+    @media print {
+      .nav-bar, .floating-actions { display: none !important; }
+      body { background: #FFFFFF !important; background-image: none !important; }
+      .glass, .highlight-panel, .table-wrap, .card {
+        box-shadow: none !important;
+        border: 1px solid #DDD !important;
+        background: #FFFFFF !important;
+      }
+      .glass::after, .highlight-panel::before, .app-icon::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-card glass">
+        <div class="app-icon-wrap">
+          <div class="app-icon"><span>🌸</span></div>
+        </div>
+        <div class="hero-content">
+          <div class="badge-bar">
+            <span class="badge badge-free">🎁 完全免费</span>
+            <span class="badge badge-gold">✦ 鸿蒙原生应用</span>
+            <span class="badge badge-green">🔒 完全单机运行</span>
+            <span class="badge badge-violet">👤 无账号 · 无注册</span>
+            <span class="badge badge-blue">🌓 深色模式适配</span>
+            <span class="badge badge-petal">🌿 百种名花百科</span>
+          </div>
+          <h1 class="hero-title">琉璃花语</h1>
+          <p class="hero-subtitle">
+            以琉璃为器，以花语为引。百种室内外名花养护百科，浇水施肥打卡，成长日记与照片轨迹——一部完全免费、完全离线的鸿蒙原生养花日记应用。数据预置本地，无需付费，无需注册，不联网。日间温柔，夜间沉静，守护你的绿意时光。
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ 导航 ============ -->
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="#offline" class="nav-btn active">免费 · 单机 · 无账号</a>
+      <a href="#dark" class="nav-btn">深色模式适配</a>
+      <a href="#position" class="nav-btn">产品定位</a>
+      <a href="#features" class="nav-btn">核心功能</a>
+      <a href="#plants" class="nav-btn">花种收录</a>
+      <a href="#care" class="nav-btn">养护体系</a>
+      <a href="#settings" class="nav-btn">个性设置</a>
+      <a href="#architecture" class="nav-btn">技术架构</a>
+      <a href="#blueprint" class="nav-btn">产品蓝图</a>
+      <a href="#info" class="nav-btn">产品信息</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- ============ 免费 · 单机 · 无账号 ============ -->
+    <section id="offline" class="section" style="margin-top: 0;">
+      <div class="highlight-panel">
+        <h2 class="highlight-title">🛡️ 完全免费 · 完全单机 · 无用户系统</h2>
+        <p class="highlight-sub">零门槛、零付费、零注册。所有花种百科与养护记录均在本机运行，无需登录、无需联网——你的养花数据，只属于你自己。</p>
+        <div class="highlight-grid">
+          <div class="highlight-item">
+            <div class="hi-icon">🎁</div>
+            <div class="hi-title">完全免费 · 无内购</div>
+            <div class="hi-desc">应用下载完全免费，所有功能开箱即用。无买断费、无订阅费、无内购、无广告，不做任何形式的商业化限制。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">📴</div>
+            <div class="hi-title">完全离线可用</div>
+            <div class="hi-desc">花种百科、浇水打卡、施肥记录、成长日记、本地照片均不依赖网络。数据预置导入项目后即可飞行模式完整使用。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">🚫</div>
+            <div class="hi-title">无账号 · 无注册</div>
+            <div class="hi-desc">不提供任何注册入口，不需要手机号、邮箱或第三方登录。下载即用，零门槛开始记录你的花草生活。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">💾</div>
+            <div class="hi-title">本地沙盒存储</div>
+            <div class="hi-desc">养花日记、浇水记录、照片、提醒全部存储于鸿蒙应用沙盒内（RdbStore + 本地文件），卸载即彻底删除，无残留。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">🔐</div>
+            <div class="hi-title">零数据收集</div>
+            <div class="hi-desc">不申请通讯录、位置、相机（仅本地相册选择）、麦克风等敏感权限。不接入任何统计分析 SDK，不做任何形式的数据上报。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">📦</div>
+            <div class="hi-title">可选本地备份</div>
+            <div class="hi-desc">支持手动导出全量数据至本地文件（JSON / CSV / 图片压缩包），通过系统文件管理器保存，方便换机迁移，全程不经过服务器。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 深色模式适配 ============ -->
+    <section id="dark" class="section">
+      <div class="section-header">
+        <div class="section-tag">Dark Mode Adaptation</div>
+        <h2 class="section-title">鸿蒙深色模式全面适配</h2>
+      </div>
+      <div class="highlight-panel" style="box-shadow: var(--shadow-glass);">
+        <h3 class="highlight-title" style="font-size: 18px;">🌓 日间柔光，夜间沉静</h3>
+        <p class="highlight-sub">应用完整遵循鸿蒙系统深色主题规范，随系统设置自动切换，无需手动干预。深夜查看养护提醒或翻看日记，护眼舒心。</p>
+        <div class="highlight-grid">
+          <div class="highlight-item">
+            <div class="hi-icon">🌗</div>
+            <div class="hi-title">系统级自动跟随</div>
+            <div class="hi-desc">监听鸿蒙系统 <code>Configuration</code> 中的颜色模式变化（<code>colorMode</code>），随系统深色/浅色设置自动切换，无需手动开关。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">💎</div>
+            <div class="hi-title">液态玻璃深色重绘</div>
+            <div class="hi-desc">深色模式下玻璃卡片的透明度、边框高光、内阴影、斜向光条全部重新校准，保持液态玻璃的层次通透感与花语氛围。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">🎨</div>
+            <div class="hi-title">花语配色体系</div>
+            <div class="hi-desc">金色主调由 #C9A96E 调整为 #D4B87E，紫色与花瓣粉相应提亮，保证深色背景下的对比度与柔和舒适度。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">📖</div>
+            <div class="hi-title">日记阅读护眼</div>
+            <div class="hi-desc">深色模式下的正文与花种介绍采用米白色文字（#DCD8EA），避免纯白刺眼；长时间翻看养护百科不易疲劳。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">🔆</div>
+            <div class="hi-title">光晕动态降亮</div>
+            <div class="hi-desc">背景光斑（呼吸光晕）在深色模式下自动降低亮度与饱和度，避免夜间出现刺眼光斑，营造沉静绿意氛围。</div>
+          </div>
+          <div class="highlight-item">
+            <div class="hi-icon">🌙</div>
+            <div class="hi-title">独立夜间模式</div>
+            <div class="hi-desc">除跟随系统外，应用内仍保留“夜间模式”独立开关，用户可强制切换，不受系统设置限制。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 产品定位 ============ -->
+    <section id="position" class="section">
+      <div class="section-header">
+        <div class="section-tag">Product Positioning</div>
+        <h2 class="section-title">产品定位与核心价值</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card glass">
+          <div class="card-icon gold">🌿</div>
+          <h3 class="card-title">百种名花 · 养护百科</h3>
+          <p class="card-desc">
+            预置丰富室内外常见与进阶花种数据（绿萝、多肉、兰花、月季、君子兰、仙客来等），每株均含光照、浇水、施肥、换盆、繁殖与常见问题解答。数据从权威资料整理后导入项目，完全离线查阅。
+          </p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon violet">📓</div>
+          <h3 class="card-title">成长日记 · 照片轨迹</h3>
+          <p class="card-desc">
+            为每盆植物建立独立档案，记录浇水、施肥、修剪、换盆与观察笔记。支持本地相册选图作为成长照片，按时间线回顾叶片舒展、新芽萌发的点滴变化。
+          </p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon green">💧</div>
+          <h3 class="card-title">智能提醒 · 本地打卡</h3>
+          <p class="card-desc">
+            根据花种特性生成浇水、施肥周期提醒（纯本地计算，不依赖网络）。打卡后自动更新连续养护天数与日历热力图，让坚持变得可视化、有成就感。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 核心功能 ============ -->
+    <section id="features" class="section">
+      <div class="section-header">
+        <div class="section-tag">Functional Modules</div>
+        <h2 class="section-title">核心功能规格矩阵</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card glass">
+          <div class="card-icon gold">📚</div>
+          <h3 class="card-title">1. 花种百科库</h3>
+          <p class="card-desc">收录上百种常见与进阶室内外植物，按难度、光照、浇水频率分类。每条记录含学名、俗名、原产地、适宜温度、湿度、土壤与病虫害提示。数据预置本地，支持关键词搜索与筛选。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon petal">🪴</div>
+          <h3 class="card-title">2. 我的花盆档案</h3>
+          <p class="card-desc">添加真实植物实例，关联百科条目，记录购买/入手日期、位置（阳台/窗台）、花盆尺寸与备注。支持自定义昵称，形成个人绿意收藏。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon green">💧</div>
+          <h3 class="card-title">3. 浇水与施肥打卡</h3>
+          <p class="card-desc">一键记录浇水、施肥、喷雾等操作，自动计算下次建议时间。支持“今日待办”列表与日历视图，连续打卡天数清晰可见。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon blue">📷</div>
+          <h3 class="card-title">4. 成长照片日记</h3>
+          <p class="card-desc">从本地相册选择照片附加到指定花盆与日期，形成时间线成长轨迹。支持简单文字笔记，回顾新叶、开花、换盆瞬间。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon violet">🗓️</div>
+          <h3 class="card-title">5. 养护日历与热力图</h3>
+          <p class="card-desc">月历直观展示每日养护动作，热力图呈现坚持频率。轻触日期可回看当天为哪些花做了什么功课。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon green">🔔</div>
+          <h3 class="card-title">6. 本地智能提醒</h3>
+          <p class="card-desc">基于花种特性与用户上次操作时间，纯本地计算生成提醒。支持系统通知与应用内角标，不联网也能准时提醒浇水。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon gold">🏆</div>
+          <h3 class="card-title">7. 养护成就徽章</h3>
+          <p class="card-desc">连续打卡、成功开花、成功繁殖、克服病虫害等均可获得徽章。已获得与下一档进度同屏展示，激励长期陪伴。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon petal">✍️</div>
+          <h3 class="card-title">8. 观察笔记与回顾</h3>
+          <p class="card-desc">自由记录叶片变化、病虫害观察、季节调整心得。支持按年汇总养护天数、最长连续与常护花种，生成精美回顾卡片。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon blue">🧩</div>
+          <h3 class="card-title">9. 桌面服务卡片</h3>
+          <p class="card-desc">支持鸿蒙服务卡片（小、中、大）。小尺寸：今日待浇水数量；中尺寸：待办列表 + 一句话花语；大尺寸：热力图概览 + 快捷打卡入口。同样适配深色模式。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 花种收录 ============ -->
+    <section id="plants" class="section">
+      <div class="section-header">
+        <div class="section-tag">Plant Collection</div>
+        <h2 class="section-title">花种收录清单（部分示例）</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="arch-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">花种名称</th>
+              <th style="width: 16%;">类型</th>
+              <th style="width: 18%;">养护难度</th>
+              <th style="width: 46%;">收录说明 / 核心养护要点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><b>绿萝</b></td><td>观叶 · 垂吊</td><td>入门</td><td>强耐阴，见干见湿；水培/土培皆可，适合新手</td></tr>
+            <tr><td><b>虎皮兰（蛇草）</b></td><td>观叶 · 多肉感</td><td>入门</td><td>极耐旱，少水少肥，空气净化能力强</td></tr>
+            <tr><td><b>多肉合集</b></td><td>多肉 · 景天科等</td><td>入门～进阶</td><td>石莲、玉露、生石花等数十品种，光照与控水要点详细</td></tr>
+            <tr><td><b>君子兰</b></td><td>观叶观花</td><td>进阶</td><td>喜散射光，忌暴晒；开花诱导与分株技巧</td></tr>
+            <tr><td><b>蝴蝶兰</b></td><td>兰科 · 开花</td><td>进阶</td><td>通风与湿度控制，花后剪梗与复花管理</td></tr>
+            <tr><td><b>月季 / 蔷薇</b></td><td>开花 · 灌木</td><td>进阶</td><td>充足日照，定期修剪与病虫害防治</td></tr>
+            <tr><td><b>仙客来</b></td><td>球根 · 开花</td><td>中等</td><td>冬春开花，夏季休眠管理与球根保存</td></tr>
+            <tr><td><b>龟背竹 / 琴叶榕</b></td><td>大型观叶</td><td>中等</td><td>明亮散射光，湿度与支撑柱管理</td></tr>
+            <tr><td><b>多肉十二卷 / 芦荟</b></td><td>多肉 · 药用</td><td>入门</td><td>控水为主，冬季保温与日照需求</td></tr>
+            <tr><td><b>吊兰 / 常春藤</b></td><td>垂吊 · 净化</td><td>入门</td><td>见干见湿，分株繁殖简单，适合悬挂</td></tr>
+            <tr><td><b>朱顶红 / 风信子</b></td><td>球根 · 开花</td><td>中等</td><td>催花与休眠周期、水培注意事项</td></tr>
+            <tr><td><b>文竹 / 袖珍椰子</b></td><td>观叶 · 清新</td><td>中等</td><td>湿度敏感，忌直射与干燥空气</td></tr>
+            <tr><td colspan="4" style="text-align:center; color: var(--text-muted); font-size: 13px;">
+              完整库覆盖 100+ 常见与进阶品种（含多肉专题、兰科专题、开花植物专题），持续精校与扩充。所有数据均预先下载整理后导入工程，运行时完全离线。
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 养护体系 ============ -->
+    <section id="care" class="section">
+      <div class="section-header">
+        <div class="section-tag">Care System</div>
+        <h2 class="section-title">养护体系与交互逻辑</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card glass">
+          <div class="card-icon green">💧</div>
+          <h3 class="card-title">浇水与日常打卡逻辑</h3>
+          <p class="card-desc">
+            • <b>打卡操作</b>：一键记录浇水 / 施肥 / 喷雾 / 修剪等动作，自动关联花盆档案<br>
+            • <b>周期计算</b>：根据花种预设周期 + 用户上次操作时间，本地推算下次提醒<br>
+            • <b>补记机制</b>：支持补记最近 7 天操作，保持日历与连续天数连续<br>
+            • <b>足迹回顾</b>：轻触日历日期即可回看当天为哪些花做了什么
+          </p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon violet">🏆</div>
+          <h3 class="card-title">成就徽章累积逻辑</h3>
+          <p class="card-desc">
+            • <b>五大类别</b>：连续养护、开花成功、繁殖成功、病虫害克服、百科阅读<br>
+            • <b>累积方式</b>：打卡、记录开花、添加繁殖笔记、完成百科阅读均可获得<br>
+            • <b>进度展示</b>：已获得徽章与正在冲刺的下一档同屏呈现<br>
+            • <b>本地计算</b>：全部徽章逻辑在本机完成，无需联网验证
+          </p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon gold">📷</div>
+          <h3 class="card-title">成长照片与笔记</h3>
+          <p class="card-desc">
+            • <b>本地选图</b>：仅使用系统相册选择器，不申请相机实时拍摄权限（可按需扩展）<br>
+            • <b>时间线</b>：照片与笔记按日期挂载到对应花盆，形成成长故事<br>
+            • <b>回顾卡片</b>：支持生成水墨 / 花语风格回顾图，可保存到本地相册
+          </p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon blue">📊</div>
+          <h3 class="card-title">年度养护回顾</h3>
+          <p class="card-desc">
+            • <b>年度汇总</b>：养护天数、最长连续、常护花种、开花次数统计<br>
+            • <b>视觉呈现</b>：生成精美回顾卡片（液态玻璃 + 花语元素）<br>
+            • <b>数据范围</b>：全部基于本地沙盒数据，隐私安全
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 个性设置 ============ -->
+    <section id="settings" class="section">
+      <div class="section-header">
+        <div class="section-tag">Personalization</div>
+        <h2 class="section-title">个性设置与阅读体验</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card glass">
+          <div class="card-icon blue">🌓</div>
+          <h3 class="card-title">深色 / 夜间模式</h3>
+          <p class="card-desc">完整适配鸿蒙系统深色模式，自动跟随系统主题切换。同时提供应用内独立“夜间模式”开关，可强制切换。深色下所有玻璃卡片、配色、光晕重新校准，护眼舒适。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon gold">🔠</div>
+          <h3 class="card-title">字号与显示密度</h3>
+          <p class="card-desc">百科与日记正文字号可在设置中使用滑块调节，满足不同视力条件。支持紧凑 / 舒适两种列表密度。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon green">📌</div>
+          <h3 class="card-title">收藏与进度记忆</h3>
+          <p class="card-desc">收藏常看花种与常护花盆，自动记住上次浏览位置与筛选条件。退出后再次打开可快速回到上次场景。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon petal">🖼️</div>
+          <h3 class="card-title">花语分享图</h3>
+          <p class="card-desc">选中日记或花种介绍片段，可生成花语风格精美图片（液态玻璃边框 + 柔光背景），保存到本地或系统分享。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon blue">📱</div>
+          <h3 class="card-title">桌面服务卡片</h3>
+          <p class="card-desc">支持鸿蒙服务卡片（小、中、大三种尺寸）。小尺寸：今日待办数量；中尺寸：待办列表 + 花语；大尺寸：热力图 + 快捷打卡。服务卡片同样支持深色模式。</p>
+        </div>
+        <div class="card glass">
+          <div class="card-icon gold">💬</div>
+          <h3 class="card-title">每日花语</h3>
+          <p class="card-desc">首页设有“每日花语”卡片，每天随机展示一句与花相关的诗意短句或养护小贴士。可收藏喜欢的句子。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 技术架构 ============ -->
+    <section id="architecture" class="section">
+      <div class="section-header">
+        <div class="section-tag">HarmonyOS Architecture</div>
+        <h2 class="section-title">鸿蒙原生技术架构与目录分层</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="arch-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">架构层次</th>
+              <th style="width: 34%;">技术选型 / 工程路径</th>
+              <th style="width: 46%;">核心职责与设计说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>视觉风格层</b></td>
+              <td>ArkUI 声明式 + 液态玻璃设计系统<br><code>entry/src/main/ets/theme/</code></td>
+              <td>采用 Apple Liquid Glass 视觉语言：多层 backdrop 模糊、半透明渐变、内阴影高光与动态光斑，构建温润通透的花语阅读与记录界面。动效艳丽但不喧宾夺主。</td>
+            </tr>
+            <tr>
+              <td><b>深色模式适配层</b></td>
+              <td><code>@ohos.app.ability.Configuration</code><br>+ <code>@ohos.mediaquery</code><br><code>entry/src/main/ets/theme/DarkMode.ets</code></td>
+              <td>监听系统 <code>colorMode</code> 变化（COLOR_MODE_DARK / COLOR_MODE_LIGHT），动态注入深浅双套 CSS 变量与玻璃参数。服务卡片与通知同样自动跟随。</td>
+            </tr>
+            <tr>
+              <td><b>展示层 (UI)</b></td>
+              <td><code>entry/src/main/ets/pages/</code><br>• <code>home/</code> <code>plant/</code> <code>diary/</code> <code>calendar/</code> <code>profile/</code></td>
+              <td>ArkTS 声明式 UI，底部 Tab 导航；花种百科、我的花盆、养护日记、日历热力图、设置五大主页面。卡片入场与点击反馈动效丰富。</td>
+            </tr>
+            <tr>
+              <td><b>通用组件层</b></td>
+              <td><code>entry/src/main/ets/common/components/</code></td>
+              <td>玻璃卡片 (GlassCard)、花种卡片 (PlantCard)、浇水按钮动效、成就徽章 (MeritBadge)、日历热力图 (CareCalendar)、照片时间线等复用组件，全部支持深色变量。</td>
+            </tr>
+            <tr>
+              <td><b>业务逻辑层</b></td>
+              <td><code>entry/src/main/ets/common/utils/</code><br>• <code>CareScheduler.ets</code> <code>BadgeEngine.ets</code> <code>DateUtil.ets</code></td>
+              <td>本地浇水周期计算引擎、成就徽章累积算法、连续打卡计算、提醒调度、回顾卡片生成。</td>
+            </tr>
+            <tr>
+              <td><b>数据持久层</b></td>
+              <td><code>entry/src/main/ets/common/database/</code><br>• <code>RdbHelper.ets</code> <code>PlantTable</code> <code>DiaryLogTable</code></td>
+              <td>基于鸿蒙原生 <code>@ohos.data.relationalStore</code> 本地 SQLite 存储；花种百科数据预置导入，用户日记与照片元数据全部落盘于应用沙盒，卸载即清除。</td>
+            </tr>
+            <tr>
+              <td><b>媒体与文件层</b></td>
+              <td><code>@ohos.file.fs</code> + <code>@ohos.file.picker</code><br>+ 本地相册选择</td>
+              <td>成长照片仅通过系统文件/相册选择器导入本地沙盒；支持导出 JSON/CSV 与图片压缩包。不申请实时相机权限（可后续扩展）。</td>
+            </tr>
+            <tr>
+              <td><b>动效层</b></td>
+              <td><code>@ohos/lottie</code> + ArkUI 隐式动画 + 自定义过渡</td>
+              <td>浇水涟漪、新芽萌发、徽章达成庆祝、卡片翻转与列表入场动效，让日常养护更有仪式感与视觉愉悦。</td>
+            </tr>
+            <tr>
+              <td><b>系统集成层</b></td>
+              <td><code>@ohos.app.form</code> (服务卡片)<br><code>@ohos.notificationManager</code> (本地通知)</td>
+              <td>鸿蒙桌面服务卡片（小/中/大三种尺寸）；本地推送提醒（不依赖网络）。</td>
+            </tr>
+            <tr>
+              <td><b>网络层</b></td>
+              <td><b>无</b></td>
+              <td>应用不集成任何网络库，不申请网络权限，完全离线运行。花种数据在开发阶段从网络整理后导入工程资源。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 产品蓝图 ============ -->
+    <section id="blueprint" class="section">
+      <div class="section-header">
+        <div class="section-tag">Product Blueprint</div>
+        <h2 class="section-title">产品蓝图规划</h2>
+      </div>
+      <div class="grid-3">
+        <div class="version-card glass">
+          <div class="version-tag current">V1.0 · 首发</div>
+          <h3 class="card-title">核心百科与日记</h3>
+          <p class="card-desc">
+            • 百种花种百科预置导入<br>
+            • 我的花盆档案与浇水打卡<br>
+            • 成长照片（本地相册）与笔记<br>
+            • 深色 / 亮色模式完整适配<br>
+            • 液态玻璃 + 艳丽入场动效
+          </p>
+        </div>
+        <div class="version-card glass">
+          <div class="version-tag">规划中 · 养护体系</div>
+          <h3 class="card-title">提醒与成就</h3>
+          <p class="card-desc">
+            • 本地智能浇水/施肥提醒<br>
+            • 养护日历与热力图<br>
+            • 成就徽章五大类别<br>
+            • 连续天数与补记机制<br>
+            • 桌面服务卡片（三尺寸）
+          </p>
+        </div>
+        <div class="version-card glass">
+          <div class="version-tag">规划中 · 内容扩充</div>
+          <h3 class="card-title">花种持续新增</h3>
+          <p class="card-desc">
+            • 多肉专题深化<br>
+            • 兰科与开花植物专题<br>
+            • 球根与季节性植物<br>
+            • 病虫害图文详解扩充<br>
+            • 数据精校与本地更新包机制
+          </p>
+        </div>
+        <div class="version-card glass">
+          <div class="version-tag">规划中 · 个性体验</div>
+          <h3 class="card-title">分享与回顾</h3>
+          <p class="card-desc">
+            • 花语风格分享图生成<br>
+            • 每日花语卡片<br>
+            • 年度养护回顾卡片<br>
+            • 字号调节与阅读进度记忆
+          </p>
+        </div>
+        <div class="version-card glass">
+          <div class="version-tag">规划中 · 深度记录</div>
+          <h3 class="card-title">观察与繁殖</h3>
+          <p class="card-desc">
+            • 详细观察笔记模板<br>
+            • 繁殖成功记录与徽章<br>
+            • 病虫害克服轨迹<br>
+            • 常护花种与最长连续统计
+          </p>
+        </div>
+        <div class="version-card glass">
+          <div class="version-tag">远期愿景</div>
+          <h3 class="card-title">数据导出与迁移</h3>
+          <p class="card-desc">
+            • 全量数据本地 JSON / CSV 导出<br>
+            • 照片与日记打包导出<br>
+            • 通过系统文件选择器保存<br>
+            • 支持换机迁移，全程不经过服务器<br>
+            • 保持 100% 单机、无账号的核心承诺
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 产品信息 ============ -->
+    <section id="info" class="section">
+      <div class="section-header">
+        <div class="section-tag">Product Info</div>
+        <h2 class="section-title">产品基本信息</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="arch-table">
+          <tbody>
+            <tr><td style="width: 22%;"><b>应用名称</b></td><td>琉璃花语（Liuli Huayu）</td></tr>
+            <tr><td><b>应用副标题</b></td><td>养花日记 · 花种百科 · 成长轨迹</td></tr>
+            <tr><td><b>开发对象</b></td><td>HarmonyOS NEXT / HarmonyOS 5.0 及以上</td></tr>
+            <tr><td><b>运行模式</b></td><td>完全单机 · 无网络依赖 · 无用户系统</td></tr>
+            <tr><td><b>价格</b></td><td><b style="color: var(--gold-deep);">完全免费 · 无买断费 · 无订阅 · 无内购 · 无广告</b></td></tr>
+            <tr><td><b>主题模式</b></td><td>亮色模式 + 深色模式（跟随鸿蒙系统自动切换，可应用内强制覆盖）</td></tr>
+            <tr><td><b>设备支持</b></td><td>HarmonyOS 手机 · 平板 · 折叠屏 · 智慧屏（自适应布局）</td></tr>
+            <tr><td><b>隐私保护</b></td><td>不收集任何用户数据；所有数据仅存储于本机沙盒，卸载即彻底清除</td></tr>
+            <tr><td><b>权限申请</b></td><td>存储（仅用于本地导出与相册选择时调用系统文件选择器）；不申请网络、通讯录、位置、麦克风等权限。相机权限仅在未来扩展实时拍摄时按需申请</td></tr>
+            <tr><td><b>数据来源</b></td><td>花种百科数据从公开权威资料整理后下载并导入工程资源，运行时完全离线</td></tr>
+            <tr><td><b>视觉风格</b></td><td>Apple Liquid Glass 液态玻璃设计语言 + 东方花语美学 · 深色模式全面适配 · 动效艳丽生动</td></tr>
+            <tr><td><b>审核友好</b></td><td>无账号体系、无网络、无敏感权限、无广告与内购，符合鸿蒙应用审核对隐私与合规的高要求</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ 页脚 ============ -->
+  <footer class="footer">
+    <div class="container">
+      <p>🌸 琉璃花语 · 以清净心，护一方绿意</p>
+      <p style="margin-top: 6px;">完全免费 · 完全单机 · 无账号 · 鸿蒙原生 · 深色模式适配</p>
+    </div>
+  </footer>
+
+  <!-- ============ 浮动按钮 ============ -->
+  <div class="floating-actions">
+    <button class="fab" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
+  </div>
+
+  <script>
+    // 导航高亮 + 平滑滚动
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const yOffset = -80;
+          const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // 滚动时自动高亮当前章节
+    const sections = document.querySelectorAll('section[id]');
+    const navBtns = document.querySelectorAll('.nav-btn');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop - 120;
+        if (window.pageYOffset >= top) current = sec.id;
+      });
+      navBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+</body>
+</html>
