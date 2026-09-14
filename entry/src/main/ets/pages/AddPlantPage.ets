@@ -85,14 +85,21 @@ struct AddPlantPage {
 
   private submit(): void {
     const today = DateUtil.formatDate();
+    // 名称与昵称先去除首尾空白：避免纯空格昵称被当作有效名字存入（卡片会变成无名）。
+    const trimmedName: string = this.plantName.trim();
+    const trimmedNickname: string = this.nickname.trim();
+    const finalName: string = trimmedName.length > 0 ? trimmedName : '新花草';
+    const finalNickname: string = trimmedNickname.length > 0
+      ? trimmedNickname
+      : (trimmedName.length > 0 ? trimmedName : '小绿意');
     const finalPlant: PlantModel = {
       id: this.editingPlant ? this.editingPlant.id : `plt_${Date.now()}`,
       speciesId: this.selectedSpeciesId,
-      name: this.plantName || '新花草',
-      nickname: this.nickname || this.plantName || '小绿意',
+      name: finalName,
+      nickname: finalNickname,
       location: this.location,
       potSize: this.potSize,
-      icon: this.plantName,
+      icon: finalName,
       acquireDate: this.editingPlant ? this.editingPlant.acquireDate : today,
       waterInterval: this.waterInterval > 0 ? this.waterInterval : 5,
       fertilizeInterval: this.fertilizeInterval > 0 ? this.fertilizeInterval : 20,
