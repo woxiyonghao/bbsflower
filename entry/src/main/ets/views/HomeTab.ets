@@ -1,9 +1,11 @@
+import router from '@ohos.router';
 import { PlantModel } from '../common/models/PlantModel';
 import { CareLogModel } from '../common/models/CareLogModel';
 import { DiaryModel } from '../common/models/DiaryModel';
 import { DAILY_QUOTES, DailyQuote } from '../common/constants/DefaultWikiData';
 import { DateUtil } from '../common/utils/DateUtil';
 import { CareScheduler, CareTaskItem } from '../common/utils/CareScheduler';
+import { PlantIcon } from '../common/components/PlantIcon';
 import { GlassCard } from '../common/components/GlassCard';
 import { StatBadge } from '../common/components/StatBadge';
 import { EmptyState } from '../common/components/EmptyState';
@@ -262,8 +264,7 @@ export struct HomeTab {
               ForEach(this.getDueTasks(), (task: CareTaskItem) => {
                 GlassCard({ isDark: this.isDark, radius: 16, paddingVal: 12 }) {
                   Row({ space: 10 }) {
-                    Text(task.icon)
-                      .fontSize(24)
+                    PlantIcon({ plantName: task.plantName, sizeVal: 40, isDark: this.isDark })
 
                     Column({ space: 3 }) {
                       Row({ space: 6 }) {
@@ -330,9 +331,7 @@ export struct HomeTab {
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
           .onClick(() => {
-            if (this.onOpenAddPlant) {
-              this.onOpenAddPlant();
-            }
+            router.pushUrl({ url: 'pages/AddPlantPage' });
           })
 
           // 记录日记
@@ -351,9 +350,7 @@ export struct HomeTab {
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
           .onClick(() => {
-            if (this.onOpenAddDiary) {
-              this.onOpenAddDiary();
-            }
+            router.pushUrl({ url: 'pages/AddDiaryPage' });
           })
 
           // 百花图鉴
@@ -393,9 +390,7 @@ export struct HomeTab {
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
           .onClick(() => {
-            if (this.onOpenShareSummary) {
-              this.onOpenShareSummary();
-            }
+            router.pushUrl({ url: 'pages/ShareSummaryPage' });
           })
         }
         .width('100%')

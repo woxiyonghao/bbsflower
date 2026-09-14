@@ -1,6 +1,8 @@
+import router from '@ohos.router';
 import { PlantModel } from '../common/models/PlantModel';
 import { DateUtil } from '../common/utils/DateUtil';
 import { CareScheduler } from '../common/utils/CareScheduler';
+import { PlantIcon } from '../common/components/PlantIcon';
 import { GlassCard } from '../common/components/GlassCard';
 import { StatBadge } from '../common/components/StatBadge';
 import { EmptyState } from '../common/components/EmptyState';
@@ -62,9 +64,7 @@ export struct GardenTab {
           .height(36)
           .padding({ left: 14, right: 14 })
           .onClick(() => {
-            if (this.onOpenAddPlant) {
-              this.onOpenAddPlant();
-            }
+            router.pushUrl({ url: 'pages/AddPlantPage' });
           })
       }
       .width('100%')
@@ -138,13 +138,9 @@ export struct GardenTab {
           Column({ space: 12 }) {
             ForEach(this.getFilteredPlants(), (plant: PlantModel) => {
               GlassCard({ isDark: this.isDark, radius: 20, paddingVal: 16 }) {
-                Row({ space: 12 }) {
+                Row({ space: 14 }) {
                   // 大图标
-                  Text(plant.icon)
-                    .fontSize(36)
-                    .padding(8)
-                    .borderRadius(18)
-                    .backgroundColor(this.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)')
+                  PlantIcon({ plantName: plant.name, sizeVal: 48, isDark: this.isDark })
 
                   // 植物详情
                   Column({ space: 4 }) {
@@ -208,9 +204,10 @@ export struct GardenTab {
                 }
                 .width('100%')
                 .onClick(() => {
-                  if (this.onSelectPlant) {
-                    this.onSelectPlant(plant);
-                  }
+                  router.pushUrl({
+                    url: 'pages/PlantDetailPage',
+                    params: { plantId: plant.id }
+                  });
                 })
               }
             })

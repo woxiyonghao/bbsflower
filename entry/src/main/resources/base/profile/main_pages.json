@@ -1,5 +1,10 @@
 {
   "src": [
-    "pages/Index"
+    "pages/Index",
+    "pages/AddPlantPage",
+    "pages/PlantDetailPage",
+    "pages/SpeciesDetailPage",
+    "pages/AddDiaryPage",
+    "pages/ShareSummaryPage"
   ]
 }

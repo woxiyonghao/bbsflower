@@ -1,3 +1,4 @@
+import router from '@ohos.router';
 import { BadgeModel } from '../common/models/BadgeModel';
 import { DiaryModel } from '../common/models/DiaryModel';
 import { PlantModel } from '../common/models/PlantModel';
@@ -204,9 +205,7 @@ export struct ProfileTab {
                   .borderRadius(12)
                   .height(30)
                   .onClick(() => {
-                    if (this.onOpenAddDiary) {
-                      this.onOpenAddDiary();
-                    }
+                    router.pushUrl({ url: 'pages/AddDiaryPage' });
                   })
               }
               .width('100%')
@@ -349,7 +348,7 @@ export struct ProfileTab {
                     .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
 
                   Row({ space: 10 }) {
-                    Button('📦 导出数据 JSON')
+                    Button('✨ 查看时光回顾卡片')
                       .fontSize(12)
                       .fontColor('#FFFFFF')
                       .backgroundColor(this.isDark ? '#305480' : '#3A7EC2')
@@ -357,9 +356,7 @@ export struct ProfileTab {
                       .layoutWeight(1)
                       .height(36)
                       .onClick(() => {
-                        if (this.onExportData) {
-                          this.onExportData();
-                        }
+                        router.pushUrl({ url: 'pages/ShareSummaryPage' });
                       })
 
                     Button('📥 导入备份')

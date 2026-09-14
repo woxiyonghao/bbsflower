@@ -1,4 +1,6 @@
+import router from '@ohos.router';
 import { SpeciesModel } from '../common/models/SpeciesModel';
+import { PlantIcon } from '../common/components/PlantIcon';
 import { GlassCard } from '../common/components/GlassCard';
 import { StatBadge } from '../common/components/StatBadge';
 import { EmptyState } from '../common/components/EmptyState';
@@ -149,13 +151,9 @@ export struct WikiTab {
           Column({ space: 12 }) {
             ForEach(this.getFilteredSpecies(), (sp: SpeciesModel) => {
               GlassCard({ isDark: this.isDark, radius: 20, paddingVal: 16 }) {
-                Row({ space: 12 }) {
+                Row({ space: 14 }) {
                   // 图标
-                  Text(sp.icon)
-                    .fontSize(34)
-                    .padding(10)
-                    .borderRadius(18)
-                    .backgroundColor(this.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)')
+                  PlantIcon({ plantName: sp.name, sizeVal: 48, isDark: this.isDark })
 
                   // 信息
                   Column({ space: 4 }) {
@@ -210,9 +208,10 @@ export struct WikiTab {
                       .height(28)
                       .padding({ left: 10, right: 10 })
                       .onClick(() => {
-                        if (this.onQuickAddToGarden) {
-                          this.onQuickAddToGarden(sp);
-                        }
+                        router.pushUrl({
+                          url: 'pages/AddPlantPage',
+                          params: { presetSpecies: sp }
+                        });
                       })
 
                     Text('要点 ❯')
@@ -223,9 +222,10 @@ export struct WikiTab {
                 }
                 .width('100%')
                 .onClick(() => {
-                  if (this.onSelectSpecies) {
-                    this.onSelectSpecies(sp);
-                  }
+                  router.pushUrl({
+                    url: 'pages/SpeciesDetailPage',
+                    params: { speciesId: sp.id }
+                  });
                 })
               }
             })

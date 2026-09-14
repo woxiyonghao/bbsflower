@@ -15,13 +15,6 @@ import { CalendarTab } from '../views/CalendarTab';
 import { WikiTab } from '../views/WikiTab';
 import { ProfileTab } from '../views/ProfileTab';
 
-// 弹窗导入
-import { AddPlantDialog } from '../dialogs/AddPlantDialog';
-import { PlantDetailDialog } from '../dialogs/PlantDetailDialog';
-import { SpeciesDetailDialog } from '../dialogs/SpeciesDetailDialog';
-import { AddDiaryDialog } from '../dialogs/AddDiaryDialog';
-import { ShareSummaryDialog } from '../dialogs/ShareSummaryDialog';
-
 @Entry
 @Component
 struct Index {
@@ -38,21 +31,6 @@ struct Index {
   @State currentTabIndex: number = 0;
   @State isDark: boolean = false;
   @State themeMode: string = 'system';
-
-  // 弹窗状态
-  @State showAddPlant: boolean = false;
-  @State editingPlant: PlantModel | null = null;
-
-  @State showPlantDetail: boolean = false;
-  @State selectedPlant: PlantModel | null = null;
-
-  @State showSpeciesDetail: boolean = false;
-  @State selectedSpecies: SpeciesModel | null = null;
-
-  @State showAddDiary: boolean = false;
-  @State diaryPlantId: string = '';
-
-  @State showShareSummary: boolean = false;
 
   private tabController: TabsController = new TabsController();
 
@@ -72,6 +50,11 @@ struct Index {
 
     // 3. 读取并刷新数据
     this.refreshData();
+  }
+
+  onPageShow(): void {
+    this.refreshData();
+    this.updateDarkModeState();
   }
 
   private updateDarkModeState(): void {
@@ -125,8 +108,6 @@ struct Index {
     };
     StorageService.getInstance().addCareLog(log);
     this.refreshData();
-    // 更新当前选中的植物引用
-    this.selectedPlant = StorageService.getInstance().getPlantById(plant.id);
   }
 
   private handlePastCareLog(plant: PlantModel, actionType: string, dateStr: string): void {
@@ -142,65 +123,6 @@ struct Index {
       note: '历史日期补记打卡'
     };
     StorageService.getInstance().addCareLog(log);
-    this.refreshData();
-  }
-
-  // ================= 花盆增删改 =================
-
-  private handleSavePlant(plant: PlantModel): void {
-    StorageService.getInstance().savePlant(plant);
-    this.refreshData();
-    this.showAddPlant = false;
-    this.editingPlant = null;
-  }
-
-  private handleDeletePlant(plantId: string): void {
-    StorageService.getInstance().deletePlant(plantId);
-    this.refreshData();
-    this.showPlantDetail = false;
-    this.selectedPlant = null;
-  }
-
-  // ================= 百科导入花园 =================
-
-  private handleSpeciesAddToGarden(sp: SpeciesModel): void {
-    const today = DateUtil.formatDate();
-    const newPlant: PlantModel = {
-      id: `plt_${Date.now()}`,
-      speciesId: sp.id,
-      name: sp.name,
-      nickname: `新收的${sp.name}`,
-      location: '阳台散光区',
-      potSize: '中盆(18cm)',
-      icon: sp.icon,
-      acquireDate: today,
-      waterInterval: sp.suggestWaterDays,
-      fertilizeInterval: sp.suggestFertilizeDays,
-      lastWaterDate: today,
-      lastFertilizeDate: today,
-      healthStatus: 'thriving',
-      notes: `从百花图鉴收录。《${sp.name}》花语：「${sp.flowerLanguage}」`,
-      isFavorite: false
-    };
-    StorageService.getInstance().savePlant(newPlant);
-    this.refreshData();
-    this.showSpeciesDetail = false;
-    // 切换到花园 Tab 提示查看
-    this.currentTabIndex = 1;
-    this.tabController.changeIndex(1);
-  }
-
-  // ================= 日记管理 =================
-
-  private handleSaveDiary(diary: DiaryModel): void {
-    StorageService.getInstance().addDiary(diary);
-    this.refreshData();
-    this.showAddDiary = false;
-    this.diaryPlantId = '';
-  }
-
-  private handleDeleteDiary(diaryId: string): void {
-    StorageService.getInstance().deleteDiary(diaryId);
     this.refreshData();
   }
 
@@ -257,17 +179,6 @@ struct Index {
             careLogs: this.careLogs,
             diaries: this.diaries,
             streakDays: this.streakDays,
-            onOpenAddPlant: () => {
-              this.editingPlant = null;
-              this.showAddPlant = true;
-            },
-            onOpenAddDiary: () => {
-              this.diaryPlantId = '';
-              this.showAddDiary = true;
-            },
-            onOpenShareSummary: () => {
-              this.showShareSummary = true;
-            },
             onSwitchTab: (idx: number) => {
               this.currentTabIndex = idx;
               this.tabController.changeIndex(idx);
@@ -287,14 +198,6 @@ struct Index {
           GardenTab({
             isDark: this.isDark,
             plants: this.plants,
-            onSelectPlant: (p: PlantModel) => {
-              this.selectedPlant = p;
-              this.showPlantDetail = true;
-            },
-            onOpenAddPlant: () => {
-              this.editingPlant = null;
-              this.showAddPlant = true;
-            },
             onQuickWater: (p: PlantModel) => {
               this.handlePlantCareAction(p, 'water', '浇水');
             }
@@ -320,14 +223,7 @@ struct Index {
         TabContent() {
           WikiTab({
             isDark: this.isDark,
-            speciesList: this.speciesList,
-            onSelectSpecies: (sp: SpeciesModel) => {
-              this.selectedSpecies = sp;
-              this.showSpeciesDetail = true;
-            },
-            onQuickAddToGarden: (sp: SpeciesModel) => {
-              this.handleSpeciesAddToGarden(sp);
-            }
+            speciesList: this.speciesList
           })
         }
         .tabBar(this.TabBuilder('百科', 3, '📚'))
@@ -344,29 +240,19 @@ struct Index {
             onChangeThemeMode: (m: string) => {
               this.handleChangeThemeMode(m);
             },
-            onOpenAddDiary: () => {
-              this.diaryPlantId = '';
-              this.showAddDiary = true;
-            },
             onDeleteDiary: (id: string) => {
-              this.handleDeleteDiary(id);
+              StorageService.getInstance().deleteDiary(id);
+              this.refreshData();
             },
             onResetData: () => {
               StorageService.getInstance().resetToSampleData();
               this.refreshData();
-            },
-            onExportData: () => {
-              // 打开数据分享
-              this.showShareSummary = true;
             },
             onImportData: (jsonStr: string) => {
               const ok = StorageService.getInstance().importDataFromJson(jsonStr);
               if (ok) {
                 this.refreshData();
               }
-            },
-            onOpenShareSummary: () => {
-              this.showShareSummary = true;
             }
           })
         }
@@ -380,99 +266,6 @@ struct Index {
       })
       .width('100%')
       .height('100%')
-
-      // ================= 全局弹窗层 =================
-
-      // 1. 添加/编辑植物弹窗
-      if (this.showAddPlant) {
-        AddPlantDialog({
-          isDark: this.isDark,
-          speciesList: this.speciesList,
-          editingPlant: this.editingPlant,
-          onSave: (p: PlantModel) => {
-            this.handleSavePlant(p);
-          },
-          onClose: () => {
-            this.showAddPlant = false;
-            this.editingPlant = null;
-          }
-        })
-      }
-
-      // 2. 植物深度详情弹窗
-      if (this.showPlantDetail && this.selectedPlant) {
-        PlantDetailDialog({
-          isDark: this.isDark,
-          plant: this.selectedPlant,
-          careLogs: this.careLogs,
-          diaries: this.diaries,
-          onClose: () => {
-            this.showPlantDetail = false;
-            this.selectedPlant = null;
-          },
-          onEdit: (p: PlantModel) => {
-            this.showPlantDetail = false;
-            this.editingPlant = p;
-            this.showAddPlant = true;
-          },
-          onDelete: (pId: string) => {
-            this.handleDeletePlant(pId);
-          },
-          onCareAction: (p: PlantModel, act: string, name: string) => {
-            this.handlePlantCareAction(p, act, name);
-          },
-          onAddDiary: (p: PlantModel) => {
-            this.showPlantDetail = false;
-            this.diaryPlantId = p.id;
-            this.showAddDiary = true;
-          }
-        })
-      }
-
-      // 3. 花种百科详情弹窗
-      if (this.showSpeciesDetail && this.selectedSpecies) {
-        SpeciesDetailDialog({
-          isDark: this.isDark,
-          species: this.selectedSpecies,
-          onClose: () => {
-            this.showSpeciesDetail = false;
-            this.selectedSpecies = null;
-          },
-          onAddToGarden: (sp: SpeciesModel) => {
-            this.handleSpeciesAddToGarden(sp);
-          }
-        })
-      }
-
-      // 4. 新增日记弹窗
-      if (this.showAddDiary) {
-        AddDiaryDialog({
-          isDark: this.isDark,
-          plants: this.plants,
-          defaultPlantId: this.diaryPlantId,
-          onSave: (d: DiaryModel) => {
-            this.handleSaveDiary(d);
-          },
-          onClose: () => {
-            this.showAddDiary = false;
-            this.diaryPlantId = '';
-          }
-        })
-      }
-
-      // 5. 养护回顾卡片弹窗
-      if (this.showShareSummary) {
-        ShareSummaryDialog({
-          isDark: this.isDark,
-          plants: this.plants,
-          careLogs: this.careLogs,
-          diaries: this.diaries,
-          streakDays: this.streakDays,
-          onClose: () => {
-            this.showShareSummary = false;
-          }
-        })
-      }
     }
     .width('100%')
     .height('100%')
