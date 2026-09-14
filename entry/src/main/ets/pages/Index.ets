@@ -267,11 +267,11 @@ struct Index {
 
             Text(item.title)
               .fontSize(11)
-              .fontWeight(this.currentTabIndex === item.index ? FontWeight.Bold : FontWeight.Normal)
+              .fontWeight(this.currentTabIndex === item.index ? FontWeight.Bold : FontWeight.Medium)
               .fontColor(
                 this.currentTabIndex === item.index
-                  ? (this.isDark ? '#D4B87E' : '#9B7428')
-                  : (this.isDark ? '#8A85A4' : '#8E8AA3')
+                  ? (this.isDark ? '#D4B87E' : '#8A5D18')
+                  : (this.isDark ? '#8A85A4' : '#6B6780')
               )
           }
           .layoutWeight(1)
@@ -280,7 +280,7 @@ struct Index {
           .borderRadius(22)
           .backgroundColor(
             this.currentTabIndex === item.index
-              ? (this.isDark ? 'rgba(212, 184, 126, 0.18)' : 'rgba(168, 135, 74, 0.14)')
+              ? (this.isDark ? 'rgba(212, 184, 126, 0.20)' : 'rgba(201, 169, 110, 0.18)')
               : Color.Transparent
           )
           .stateStyles({
@@ -304,17 +304,21 @@ struct Index {
       .height(58)
       .padding({ left: 6, right: 6, top: 4, bottom: 4 })
       .borderRadius(29)
-      .backgroundColor(this.isDark ? 'rgba(28, 24, 42, 0.78)' : 'rgba(255, 255, 255, 0.82)')
-      .backgroundBlurStyle(BlurStyle.Thin)
+      .backgroundColor(this.isDark ? 'rgba(28, 24, 42, 0.85)' : 'rgba(255, 255, 255, 0.92)')
+      .backgroundBlurStyle(
+        this.isDark ? BlurStyle.Regular : BlurStyle.Thin,
+        { colorMode: this.isDark ? ThemeColorMode.DARK : ThemeColorMode.LIGHT }
+      )
+      .backdropBlur(25)
       .shadow({
         radius: 20,
-        color: this.isDark ? 'rgba(0, 0, 0, 0.40)' : 'rgba(168, 135, 74, 0.10)',
+        color: this.isDark ? 'rgba(0, 0, 0, 0.40)' : 'rgba(168, 135, 74, 0.12)',
         offsetX: 0,
         offsetY: 4
       })
       .border({
         width: 1,
-        color: this.isDark ? 'rgba(212, 184, 126, 0.22)' : 'rgba(255, 255, 255, 0.90)'
+        color: this.isDark ? 'rgba(212, 184, 126, 0.22)' : 'rgba(255, 255, 255, 0.95)'
       })
       .margin({ bottom: 18 })
     }
