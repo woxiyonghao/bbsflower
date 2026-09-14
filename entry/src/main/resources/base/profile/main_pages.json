@@ -8,6 +8,7 @@
     "pages/ShareSummaryPage",
     "pages/RetrofitCarePage",
     "pages/BackupRestorePage",
-    "pages/DiaryDetailPage"
+    "pages/DiaryDetailPage",
+    "pages/PrivacyPolicyPage"
   ]
 }

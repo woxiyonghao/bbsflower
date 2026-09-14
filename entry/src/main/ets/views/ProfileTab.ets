@@ -406,7 +406,38 @@ export struct ProfileTab {
                 .width('100%')
               }
 
-              // 3. 关于琉璃花语
+              // 3. 用户协议与隐私保护
+              GlassCard({ isDark: this.isDark, radius: 18, paddingVal: 16 }) {
+                Column({ space: 10 }) {
+                  Row() {
+                    Row({ space: 6 }) {
+                      Text('📜')
+                        .fontSize(16)
+                      Text('隐私政策与用户协议')
+                        .fontSize(14)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
+                    }
+                    Blank()
+                    Text('查看全文 ❯')
+                      .fontSize(12)
+                      .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                  }
+                  .width('100%')
+
+                  Text('我们恪守纯单机架构，零账号、零云端上传、零敏感权限。所有花草数据与日记均存储于本机沙盒，卸载即自动物理擦除。')
+                    .fontSize(11.5)
+                    .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
+                    .lineHeight(18)
+                }
+                .alignItems(HorizontalAlign.Start)
+                .width('100%')
+                .onClick(() => {
+                  router.pushUrl({ url: 'pages/PrivacyPolicyPage' });
+                })
+              }
+
+              // 4. 关于琉璃花语
               GlassCard({ isDark: this.isDark, radius: 18, paddingVal: 16 }) {
                 Column({ space: 6 }) {
                   Text('🌸 关于 琉璃花语')

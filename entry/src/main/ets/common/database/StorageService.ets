@@ -18,6 +18,7 @@ export interface AppDataPayload {
   careLogs: CareLogModel[];
   diaries: DiaryModel[];
   themeMode: string; // 'system' | 'light' | 'dark'
+  hasAgreedPrivacy?: boolean;
 }
 
 export class StorageService {
@@ -31,6 +32,7 @@ export class StorageService {
   private careLogs: CareLogModel[] = [];
   private diaries: DiaryModel[] = [];
   private themeMode: string = 'system';
+  private hasAgreedPrivacy: boolean = false;
   private isLoaded: boolean = false;
 
   private constructor() {}
@@ -71,6 +73,7 @@ export class StorageService {
               this.careLogs = data.careLogs || [];
               this.diaries = data.diaries || [];
               this.themeMode = data.themeMode || 'light';
+              this.hasAgreedPrivacy = !!data.hasAgreedPrivacy;
               loadedSuccessfully = true;
             }
           }
@@ -87,6 +90,7 @@ export class StorageService {
       this.careLogs = JSON.parse(JSON.stringify(DEFAULT_INITIAL_CARE_LOGS)) as CareLogModel[];
       this.diaries = JSON.parse(JSON.stringify(DEFAULT_INITIAL_DIARIES)) as DiaryModel[];
       this.themeMode = 'light';
+      this.hasAgreedPrivacy = false;
       this.saveToStorage();
     }
 
@@ -108,7 +112,8 @@ export class StorageService {
         species: this.species,
         careLogs: this.careLogs,
         diaries: this.diaries,
-        themeMode: this.themeMode
+        themeMode: this.themeMode,
+        hasAgreedPrivacy: this.hasAgreedPrivacy
       };
       const jsonStr = JSON.stringify(payload);
       const file = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE | fs.OpenMode.TRUNC);
@@ -118,6 +123,15 @@ export class StorageService {
     } catch (err) {
       return false;
     }
+  }
+
+  public getHasAgreedPrivacy(): boolean {
+    return this.hasAgreedPrivacy;
+  }
+
+  public setHasAgreedPrivacy(agreed: boolean): void {
+    this.hasAgreedPrivacy = agreed;
+    this.saveToStorage();
   }
 
   // ============== 花盆 (Plants) 业务操作 ==============

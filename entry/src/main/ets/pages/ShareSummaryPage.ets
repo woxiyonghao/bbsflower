@@ -256,17 +256,21 @@ struct ShareSummaryPage {
   }
 
   pageTransition() {
+    // 1. Push 进入当前页：从右边向左滑入
     PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
-      .slide(SlideEffect.Left)
-      .opacity(0.8)
+      .slide(SlideEffect.Right)
+      .opacity(0)
+    // 2. Pop 退出当前页返回上一级：向右边滑出
     PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
       .slide(SlideEffect.Right)
-      .opacity(0.8)
-    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
-      .slide(SlideEffect.Right)
-      .opacity(0.8)
-    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .opacity(0)
+    // 3. 作为前置页面被更深级 Push 压栈时退出：向左边滑出
+    PageTransitionExit({ type: RouteType.Push, duration: 240, curve: Curve.EaseIn })
       .slide(SlideEffect.Left)
-      .opacity(0.8)
+      .opacity(0)
+    // 4. 更深级页面 Pop 返回时当前页面恢复：从左边滑入
+    PageTransitionEnter({ type: RouteType.Pop, duration: 280, curve: Curve.EaseOut })
+      .slide(SlideEffect.Left)
+      .opacity(0)
   }
 }

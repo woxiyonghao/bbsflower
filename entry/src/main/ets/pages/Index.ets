@@ -1,4 +1,6 @@
 import common from '@ohos.app.ability.common';
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 import { PlantModel } from '../common/models/PlantModel';
 import { SpeciesModel } from '../common/models/SpeciesModel';
 import { CareLogModel } from '../common/models/CareLogModel';
@@ -37,6 +39,7 @@ struct Index {
   @State currentTabIndex: number = 0;
   @State isDark: boolean = false;
   @State themeMode: string = 'light';
+  @State showPrivacyDialog: boolean = false;
 
   private tabController: TabsController = new TabsController();
   private tabItems: TabItemConfig[] = [
@@ -56,12 +59,15 @@ struct Index {
       StorageService.getInstance().init();
     }
 
-    // 2. 初始化主题
+    // 2. 检查隐私协议合规签署状态
+    this.showPrivacyDialog = !StorageService.getInstance().getHasAgreedPrivacy();
+
+    // 3. 初始化主题
     ThemeManager.getInstance().init();
     this.themeMode = ThemeManager.getInstance().getThemeMode();
     this.updateDarkModeState();
 
-    // 3. 读取并刷新数据
+    // 4. 读取并刷新数据
     this.refreshData();
   }
 
@@ -321,8 +327,169 @@ struct Index {
         color: this.isDark ? 'rgba(212, 184, 126, 0.22)' : 'rgba(255, 255, 255, 0.95)'
       })
       .margin({ bottom: 18 })
+
+      // 4. 首次冷启动隐私协议合规弹窗
+      if (this.showPrivacyDialog) {
+        Stack() {
+          // 蒙层
+          Column()
+            .width('100%')
+            .height('100%')
+            .backgroundColor('rgba(0, 0, 0, 0.65)')
+            .backdropBlur(15)
+
+          // 弹窗卡片
+          Column({ space: 16 }) {
+            // 头部
+            Column({ space: 6 }) {
+              Row({ space: 8 }) {
+                Text('🌸')
+                  .fontSize(28)
+                Text('花伴录服务与隐私指引')
+                  .fontSize(18)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor(this.isDark ? '#F5E6C8' : '#2D283E')
+              }
+              .alignItems(VerticalAlign.Center)
+
+              Text('纯单机离线 · 零云端上传 · 保护您的私密空间')
+                .fontSize(12)
+                .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                .fontWeight(FontWeight.Medium)
+            }
+            .alignItems(HorizontalAlign.Center)
+            .width('100%')
+
+            // 正文说明
+            Column({ space: 10 }) {
+              Text('欢迎使用「花伴录」！为了向您提供植物图鉴、养护打卡与日记记录功能，请您充分阅读并知悉以下说明：')
+                .fontSize(13)
+                .fontColor(this.isDark ? '#DDD8EC' : '#4E4A62')
+                .lineHeight(20)
+
+              Column({ space: 6 }) {
+                Row({ space: 6 }) {
+                  Text('•')
+                    .fontSize(13)
+                    .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                  Text('单机运行：本应用不申请外部网络权限，不收集设备识别码与个人账号。')
+                    .fontSize(12)
+                    .fontColor(this.isDark ? '#BBB5D4' : '#646079')
+                    .layoutWeight(1)
+                    .lineHeight(18)
+                }
+
+                Row({ space: 6 }) {
+                  Text('•')
+                    .fontSize(13)
+                    .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                  Text('沙盒存储：您的养护数据与日记均保存在本机沙盒，可自主导出备份。')
+                    .fontSize(12)
+                    .fontColor(this.isDark ? '#BBB5D4' : '#646079')
+                    .layoutWeight(1)
+                    .lineHeight(18)
+                }
+
+                Row({ space: 6 }) {
+                  Text('•')
+                    .fontSize(13)
+                    .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                  Text('相册权限：仅在您主动上传植物或日记照片时，按需申请只读相册授权。')
+                    .fontSize(12)
+                    .fontColor(this.isDark ? '#BBB5D4' : '#646079')
+                    .layoutWeight(1)
+                    .lineHeight(18)
+                }
+              }
+              .width('100%')
+              .padding(10)
+              .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(168, 135, 74, 0.08)')
+              .borderRadius(12)
+
+              Row() {
+                Text('点击阅读完整的')
+                  .fontSize(12)
+                  .fontColor(this.isDark ? '#A29DC0' : '#77728D')
+                Text('《隐私政策与用户协议》')
+                  .fontSize(12)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor(this.isDark ? '#E5C483' : '#8A5D18')
+                  .decoration({ type: TextDecorationType.Underline, color: this.isDark ? '#E5C483' : '#8A5D18' })
+                  .onClick(() => {
+                    router.pushUrl({ url: 'pages/PrivacyPolicyPage' });
+                  })
+              }
+              .width('100%')
+              .justifyContent(FlexAlign.Center)
+              .padding({ top: 4 })
+            }
+            .width('100%')
+
+            // 底部操作按钮
+            Row({ space: 12 }) {
+              Button('不同意并退出')
+                .fontSize(14)
+                .fontColor(this.isDark ? '#AAA5C0' : '#7D7992')
+                .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)')
+                .borderRadius(20)
+                .height(42)
+                .layoutWeight(1)
+                .onClick(() => {
+                  try {
+                    const ctx = this.getUIContext()?.getHostContext() as common.UIAbilityContext;
+                    if (ctx && ctx.terminateSelf) {
+                      ctx.terminateSelf();
+                    } else {
+                      promptAction.showToast({ message: '请同意隐私协议后方可使用本应用' });
+                    }
+                  } catch (e) {
+                    promptAction.showToast({ message: '请同意隐私协议后方可使用本应用' });
+                  }
+                })
+
+              Button('同意并开启')
+                .fontSize(14)
+                .fontWeight(FontWeight.Bold)
+                .fontColor(this.isDark ? '#1C1508' : '#FFFFFF')
+                .backgroundColor(this.isDark ? '#D4B87E' : '#9E7836')
+                .borderRadius(20)
+                .height(42)
+                .layoutWeight(1.2)
+                .shadow({ radius: 8, color: this.isDark ? 'rgba(212, 184, 126, 0.35)' : 'rgba(158, 120, 54, 0.35)', offsetY: 2 })
+                .onClick(() => {
+                  StorageService.getInstance().setHasAgreedPrivacy(true);
+                  this.showPrivacyDialog = false;
+                  promptAction.showToast({ message: '欢迎踏入花伴雅境' });
+                })
+            }
+            .width('100%')
+            .padding({ top: 4 })
+          }
+          .width('88%')
+          .padding(22)
+          .borderRadius(24)
+          .backgroundColor(this.isDark ? '#252038' : '#FAF8F5')
+          .border({ width: 1, color: this.isDark ? 'rgba(212, 184, 126, 0.3)' : 'rgba(168, 135, 74, 0.25)' })
+          .shadow({ radius: 25, color: 'rgba(0, 0, 0, 0.35)', offsetY: 8 })
+          .align(Alignment.Center)
+        }
+        .width('100%')
+        .height('100%')
+        .alignContent(Alignment.Center)
+      }
     }
     .width('100%')
     .height('100%')
+  }
+
+  pageTransition() {
+    // 离开首页前往二级页面：向左滑出避让
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
+      .slide(SlideEffect.Left)
+      .opacity(0)
+    // 从二级页面返回首页：从左边滑入恢复
+    PageTransitionEnter({ type: RouteType.Pop, duration: 280, curve: Curve.EaseOut })
+      .slide(SlideEffect.Left)
+      .opacity(0)
   }
 }
