@@ -505,13 +505,13 @@ export struct HomeTab {
 
               Blank()
 
-              Text('查看日历 →')
+              Text('全部足迹 →')
                 .fontSize(12)
                 .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
                 .onClick(() => {
-                  if (this.onSwitchTab) {
-                    this.onSwitchTab(2);
-                  }
+                  router.pushUrl({
+                    url: 'pages/CareFootprintsPage'
+                  });
                 })
             }
             .width('100%')

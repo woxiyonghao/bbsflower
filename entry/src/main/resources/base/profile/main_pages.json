@@ -9,6 +9,7 @@
     "pages/RetrofitCarePage",
     "pages/BackupRestorePage",
     "pages/DiaryDetailPage",
-    "pages/PrivacyPolicyPage"
+    "pages/PrivacyPolicyPage",
+    "pages/CareFootprintsPage"
   ]
 }
