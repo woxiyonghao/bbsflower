@@ -276,77 +276,113 @@ struct AddPlantPage {
 
               Row({ space: 12 }) {
                 // 浇水周期
-                Column({ space: 6 }) {
+                Column({ space: 8 }) {
                   Text('💧 建议浇水周期')
                     .fontSize(12)
+                    .fontWeight(FontWeight.Medium)
                     .fontColor(this.isDark ? '#9CC8F0' : '#2B6CB0')
 
-                  Row({ space: 8 }) {
-                    Button('-')
-                      .width(34)
-                      .height(34)
-                      .fontSize(16)
-                      .backgroundColor(this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)')
-                      .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-                      .onClick(() => {
-                        if (this.waterInterval > 1) {
-                          this.waterInterval--;
-                        }
-                      })
+                  Row({ space: 6 }) {
+                    Button({ type: ButtonType.Circle, stateEffect: true }) {
+                      Text('－')
+                        .fontSize(16)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
+                        .textAlign(TextAlign.Center)
+                    }
+                    .width(32)
+                    .height(32)
+                    .padding(0)
+                    .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.06)')
+                    .border({ width: 1, color: this.isDark ? 'rgba(212, 184, 126, 0.25)' : 'rgba(168, 135, 74, 0.20)' })
+                    .onClick(() => {
+                      if (this.waterInterval > 1) {
+                        this.waterInterval--;
+                      }
+                    })
 
                     Text(`${this.waterInterval} 天`)
-                      .fontSize(14)
+                      .fontSize(13)
                       .fontWeight(FontWeight.Bold)
                       .fontColor(this.isDark ? '#D4B87E' : '#C9A96E')
+                      .padding({ left: 8, right: 8, top: 4, bottom: 4 })
+                      .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)')
+                      .borderRadius(6)
+                      .textAlign(TextAlign.Center)
 
-                    Button('+')
-                      .width(34)
-                      .height(34)
-                      .fontSize(16)
-                      .backgroundColor(this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)')
-                      .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-                      .onClick(() => {
-                        this.waterInterval++;
-                      })
+                    Button({ type: ButtonType.Circle, stateEffect: true }) {
+                      Text('＋')
+                        .fontSize(16)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                        .textAlign(TextAlign.Center)
+                    }
+                    .width(32)
+                    .height(32)
+                    .padding(0)
+                    .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.18)' : 'rgba(201, 169, 110, 0.18)')
+                    .border({ width: 1, color: this.isDark ? 'rgba(212, 184, 126, 0.40)' : 'rgba(201, 169, 110, 0.35)' })
+                    .onClick(() => {
+                      this.waterInterval++;
+                    })
                   }
+                  .alignItems(VerticalAlign.Center)
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
 
                 // 施肥周期
-                Column({ space: 6 }) {
+                Column({ space: 8 }) {
                   Text('🌿 建议施肥周期')
                     .fontSize(12)
+                    .fontWeight(FontWeight.Medium)
                     .fontColor(this.isDark ? '#8EE0D0' : '#234E52')
 
-                  Row({ space: 8 }) {
-                    Button('-')
-                      .width(34)
-                      .height(34)
-                      .fontSize(16)
-                      .backgroundColor(this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)')
-                      .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-                      .onClick(() => {
-                        if (this.fertilizeInterval > 5) {
-                          this.fertilizeInterval -= 5;
-                        }
-                      })
+                  Row({ space: 6 }) {
+                    Button({ type: ButtonType.Circle, stateEffect: true }) {
+                      Text('－')
+                        .fontSize(16)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
+                        .textAlign(TextAlign.Center)
+                    }
+                    .width(32)
+                    .height(32)
+                    .padding(0)
+                    .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.06)')
+                    .border({ width: 1, color: this.isDark ? 'rgba(142, 224, 208, 0.25)' : 'rgba(35, 78, 82, 0.20)' })
+                    .onClick(() => {
+                      if (this.fertilizeInterval > 5) {
+                        this.fertilizeInterval -= 5;
+                      }
+                    })
 
                     Text(`${this.fertilizeInterval} 天`)
-                      .fontSize(14)
+                      .fontSize(13)
                       .fontWeight(FontWeight.Bold)
                       .fontColor(this.isDark ? '#8EE0D0' : '#388E6D')
+                      .padding({ left: 8, right: 8, top: 4, bottom: 4 })
+                      .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)')
+                      .borderRadius(6)
+                      .textAlign(TextAlign.Center)
 
-                    Button('+')
-                      .width(34)
-                      .height(34)
-                      .fontSize(16)
-                      .backgroundColor(this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)')
-                      .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-                      .onClick(() => {
-                        this.fertilizeInterval += 5;
-                      })
+                    Button({ type: ButtonType.Circle, stateEffect: true }) {
+                      Text('＋')
+                        .fontSize(16)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor(this.isDark ? '#8EE0D0' : '#2D8A75')
+                        .textAlign(TextAlign.Center)
+                    }
+                    .width(32)
+                    .height(32)
+                    .padding(0)
+                    .backgroundColor(this.isDark ? 'rgba(142, 224, 208, 0.18)' : 'rgba(45, 138, 117, 0.15)')
+                    .border({ width: 1, color: this.isDark ? 'rgba(142, 224, 208, 0.40)' : 'rgba(45, 138, 117, 0.35)' })
+                    .onClick(() => {
+                      this.fertilizeInterval += 5;
+                    })
                   }
+                  .alignItems(VerticalAlign.Center)
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
