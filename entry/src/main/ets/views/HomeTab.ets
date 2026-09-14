@@ -72,18 +72,39 @@ export struct HomeTab {
               isDark: this.isDark
             })
 
-            // 主题切换按钮
-            Button(this.isDark ? '☀️' : '🌙')
-              .width(36)
-              .height(36)
-              .fontSize(16)
-              .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(0, 0, 0, 0.05)')
-              .borderRadius(18)
-              .onClick(() => {
-                if (this.onToggleTheme) {
-                  this.onToggleTheme();
-                }
-              })
+            // 主题切换高辨识度微拟态胶囊
+            Row({ space: 4 }) {
+              Text(this.isDark ? '🌙' : '☀️')
+                .fontSize(13)
+              Text(this.isDark ? '深色' : '浅色')
+                .fontSize(11)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(this.isDark ? '#D4B87E' : '#7C5E28')
+            }
+            .height(30)
+            .padding({ left: 9, right: 11 })
+            .borderRadius(15)
+            .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.16)' : 'rgba(201, 169, 110, 0.16)')
+            .border({
+              width: 1,
+              color: this.isDark ? 'rgba(212, 184, 126, 0.32)' : 'rgba(201, 169, 110, 0.32)'
+            })
+            .stateStyles({
+              pressed: {
+                .scale({ x: 0.94, y: 0.94 })
+                .opacity(0.85)
+              },
+              normal: {
+                .scale({ x: 1.0, y: 1.0 })
+                .opacity(1.0)
+              }
+            })
+            .animation({ duration: 150, curve: Curve.EaseOut })
+            .onClick(() => {
+              if (this.onToggleTheme) {
+                this.onToggleTheme();
+              }
+            })
           }
         }
         .width('100%')
@@ -298,6 +319,17 @@ export struct HomeTab {
                       .borderRadius(12)
                       .height(34)
                       .padding({ left: 12, right: 12 })
+                      .stateStyles({
+                        pressed: {
+                          .scale({ x: 0.94, y: 0.94 })
+                          .opacity(0.85)
+                        },
+                        normal: {
+                          .scale({ x: 1.0, y: 1.0 })
+                          .opacity(1.0)
+                        }
+                      })
+                      .animation({ duration: 150, curve: Curve.EaseOut })
                       .onClick(() => {
                         if (this.onQuickCare) {
                           this.onQuickCare(task);
@@ -330,6 +362,17 @@ export struct HomeTab {
           .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : '#FFFFFF')
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
+          .stateStyles({
+            pressed: {
+              .scale({ x: 0.94, y: 0.94 })
+              .opacity(0.85)
+            },
+            normal: {
+              .scale({ x: 1.0, y: 1.0 })
+              .opacity(1.0)
+            }
+          })
+          .animation({ duration: 150, curve: Curve.EaseOut })
           .onClick(() => {
             router.pushUrl({ url: 'pages/AddPlantPage' });
           })
@@ -349,6 +392,17 @@ export struct HomeTab {
           .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : '#FFFFFF')
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
+          .stateStyles({
+            pressed: {
+              .scale({ x: 0.94, y: 0.94 })
+              .opacity(0.85)
+            },
+            normal: {
+              .scale({ x: 1.0, y: 1.0 })
+              .opacity(1.0)
+            }
+          })
+          .animation({ duration: 150, curve: Curve.EaseOut })
           .onClick(() => {
             router.pushUrl({ url: 'pages/AddDiaryPage' });
           })
@@ -368,6 +422,17 @@ export struct HomeTab {
           .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : '#FFFFFF')
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
+          .stateStyles({
+            pressed: {
+              .scale({ x: 0.94, y: 0.94 })
+              .opacity(0.85)
+            },
+            normal: {
+              .scale({ x: 1.0, y: 1.0 })
+              .opacity(1.0)
+            }
+          })
+          .animation({ duration: 150, curve: Curve.EaseOut })
           .onClick(() => {
             if (this.onSwitchTab) {
               this.onSwitchTab(3); // 百科 Tab
@@ -389,6 +454,17 @@ export struct HomeTab {
           .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : '#FFFFFF')
           .borderWidth(1)
           .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.05)')
+          .stateStyles({
+            pressed: {
+              .scale({ x: 0.94, y: 0.94 })
+              .opacity(0.85)
+            },
+            normal: {
+              .scale({ x: 1.0, y: 1.0 })
+              .opacity(1.0)
+            }
+          })
+          .animation({ duration: 150, curve: Curve.EaseOut })
           .onClick(() => {
             router.pushUrl({ url: 'pages/ShareSummaryPage' });
           })
@@ -450,7 +526,7 @@ export struct HomeTab {
         }
       }
       .width('100%')
-      .padding({ left: 16, right: 16, bottom: 24 })
+      .padding({ left: 16, right: 16, bottom: 96 })
     }
     .width('100%')
     .height('100%')

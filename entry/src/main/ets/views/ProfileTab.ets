@@ -417,7 +417,7 @@ export struct ProfileTab {
           }
         }
         .width('100%')
-        .padding({ left: 16, right: 16, bottom: 24 })
+        .padding({ left: 16, right: 16, bottom: 96 })
       }
       .width('100%')
       .height('100%')

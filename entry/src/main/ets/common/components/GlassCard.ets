@@ -33,5 +33,6 @@ export struct GlassCard {
       offsetY: 6
     })
     .backdropBlur(25)
+    .animation({ duration: 250, curve: Curve.EaseInOut })
   }
 }

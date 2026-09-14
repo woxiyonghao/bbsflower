@@ -247,4 +247,13 @@ struct ShareSummaryPage {
     .height('100%')
     .backgroundColor(this.isDark ? '#100D1C' : '#FAF6F0')
   }
+
+  pageTransition() {
+    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
+      .slide(SlideEffect.Right)
+      .opacity(0)
+    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+      .slide(SlideEffect.Left)
+      .opacity(0)
+  }
 }

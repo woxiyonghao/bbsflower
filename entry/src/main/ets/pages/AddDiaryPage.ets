@@ -95,17 +95,9 @@ struct AddDiaryPage {
 
         Blank()
 
-        Button('写好了')
-          .fontSize(14)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#FFFFFF')
-          .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
-          .borderRadius(14)
-          .height(32)
-          .padding({ left: 14, right: 14 })
-          .onClick(() => {
-            this.submit();
-          })
+        // 占位平衡返回按钮宽度，确保标题完美居中
+        Row()
+          .width(52)
       }
       .width('100%')
       .padding({ left: 16, right: 16, top: 12, bottom: 12 })
@@ -263,6 +255,17 @@ struct AddDiaryPage {
             .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
             .borderRadius(16)
             .margin({ top: 8, bottom: 24 })
+            .stateStyles({
+              pressed: {
+                .scale({ x: 0.97, y: 0.97 })
+                .opacity(0.88)
+              },
+              normal: {
+                .scale({ x: 1.0, y: 1.0 })
+                .opacity(1.0)
+              }
+            })
+            .animation({ duration: 150, curve: Curve.EaseOut })
             .onClick(() => {
               this.submit();
             })
@@ -275,5 +278,14 @@ struct AddDiaryPage {
     .width('100%')
     .height('100%')
     .backgroundColor(this.isDark ? '#100D1C' : '#FAF6F0')
+  }
+
+  pageTransition() {
+    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
+      .slide(SlideEffect.Right)
+      .opacity(0)
+    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+      .slide(SlideEffect.Left)
+      .opacity(0)
   }
 }

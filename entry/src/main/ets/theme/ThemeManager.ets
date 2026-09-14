@@ -3,7 +3,7 @@ import { StorageService } from '../common/database/StorageService';
 
 export class ThemeManager {
   private static instance: ThemeManager | null = null;
-  private currentMode: string = 'system'; // 'system' | 'light' | 'dark'
+  private currentMode: string = 'light'; // 'system' | 'light' | 'dark'
   private isSystemDark: boolean = false;
 
   private constructor() {}
@@ -19,7 +19,7 @@ export class ThemeManager {
     if (savedMode) {
       this.currentMode = savedMode;
     } else {
-      this.currentMode = StorageService.getInstance().getThemeMode() || 'system';
+      this.currentMode = StorageService.getInstance().getThemeMode() || 'light';
     }
   }
 

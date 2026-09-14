@@ -15,6 +15,12 @@ import { CalendarTab } from '../views/CalendarTab';
 import { WikiTab } from '../views/WikiTab';
 import { ProfileTab } from '../views/ProfileTab';
 
+interface TabItemConfig {
+  index: number;
+  icon: string;
+  title: string;
+}
+
 @Entry
 @Component
 struct Index {
@@ -30,9 +36,16 @@ struct Index {
   // 主题与交互状态
   @State currentTabIndex: number = 0;
   @State isDark: boolean = false;
-  @State themeMode: string = 'system';
+  @State themeMode: string = 'light';
 
   private tabController: TabsController = new TabsController();
+  private tabItems: TabItemConfig[] = [
+    { index: 0, icon: '🌸', title: '今日' },
+    { index: 1, icon: '🪴', title: '花园' },
+    { index: 2, icon: '📅', title: '日历' },
+    { index: 3, icon: '📚', title: '百科' },
+    { index: 4, icon: '🏮', title: '雅舍' }
+  ];
 
   aboutToAppear(): void {
     // 1. 初始化存储
@@ -139,31 +152,9 @@ struct Index {
     this.handleChangeThemeMode(nextMode);
   }
 
-  // ================= TabBar 自定义样式 =================
-
-  @Builder
-  TabBuilder(title: string, targetIndex: number, icon: string) {
-    Column({ space: 3 }) {
-      Text(icon)
-        .fontSize(this.currentTabIndex === targetIndex ? 20 : 18)
-
-      Text(title)
-        .fontSize(11)
-        .fontWeight(this.currentTabIndex === targetIndex ? FontWeight.Bold : FontWeight.Normal)
-        .fontColor(
-          this.currentTabIndex === targetIndex
-            ? (this.isDark ? '#D4B87E' : '#A8874A')
-            : (this.isDark ? '#736F90' : '#8E8AA3')
-        )
-    }
-    .width('100%')
-    .height(52)
-    .justifyContent(FlexAlign.Center)
-  }
-
   build() {
-    Stack({ alignContent: Alignment.TopStart }) {
-      // 1. 液态玻璃环境渐变背景
+    Stack({ alignContent: Alignment.Bottom }) {
+      // 1. 全屏背景底色
       Column()
         .width('100%')
         .height('100%')
@@ -191,7 +182,6 @@ struct Index {
             }
           })
         }
-        .tabBar(this.TabBuilder('今日', 0, '🌸'))
 
         // Tab 1: 我的花园
         TabContent() {
@@ -203,7 +193,6 @@ struct Index {
             }
           })
         }
-        .tabBar(this.TabBuilder('花园', 1, '🪴'))
 
         // Tab 2: 养护日历
         TabContent() {
@@ -217,7 +206,6 @@ struct Index {
             }
           })
         }
-        .tabBar(this.TabBuilder('日历', 2, '📅'))
 
         // Tab 3: 百花图鉴
         TabContent() {
@@ -226,7 +214,6 @@ struct Index {
             speciesList: this.speciesList
           })
         }
-        .tabBar(this.TabBuilder('百科', 3, '📚'))
 
         // Tab 4: 雅舍与成就设置
         TabContent() {
@@ -256,16 +243,80 @@ struct Index {
             }
           })
         }
-        .tabBar(this.TabBuilder('雅舍', 4, '🏮'))
       }
-      .barHeight(64)
-      .barBackgroundColor(this.isDark ? 'rgba(25, 20, 36, 0.92)' : 'rgba(255, 255, 255, 0.92)')
-      .barMode(BarMode.Fixed)
+      .scrollable(false)
+      .barHeight(0)
+      .animationDuration(300)
       .onChange((index: number) => {
         this.currentTabIndex = index;
       })
       .width('100%')
       .height('100%')
+
+      // 3. 悬浮毛玻璃胶囊导航栏（保持琉璃花语金雅色调，液态玻璃拟态质感）
+      Row({ space: 4 }) {
+        ForEach(this.tabItems, (item: TabItemConfig) => {
+          Column({ space: 2 }) {
+            Text(item.icon)
+              .fontSize(18)
+              .scale({
+                x: this.currentTabIndex === item.index ? 1.15 : 1.0,
+                y: this.currentTabIndex === item.index ? 1.15 : 1.0
+              })
+              .animation({ duration: 200, curve: Curve.EaseInOut })
+
+            Text(item.title)
+              .fontSize(11)
+              .fontWeight(this.currentTabIndex === item.index ? FontWeight.Bold : FontWeight.Normal)
+              .fontColor(
+                this.currentTabIndex === item.index
+                  ? (this.isDark ? '#D4B87E' : '#9B7428')
+                  : (this.isDark ? '#8A85A4' : '#8E8AA3')
+              )
+          }
+          .layoutWeight(1)
+          .height('100%')
+          .justifyContent(FlexAlign.Center)
+          .borderRadius(22)
+          .backgroundColor(
+            this.currentTabIndex === item.index
+              ? (this.isDark ? 'rgba(212, 184, 126, 0.18)' : 'rgba(168, 135, 74, 0.14)')
+              : Color.Transparent
+          )
+          .stateStyles({
+            pressed: {
+              .scale({ x: 0.94, y: 0.94 })
+              .opacity(0.85)
+            },
+            normal: {
+              .scale({ x: 1.0, y: 1.0 })
+              .opacity(1.0)
+            }
+          })
+          .animation({ duration: 150, curve: Curve.EaseOut })
+          .onClick(() => {
+            this.currentTabIndex = item.index;
+            this.tabController.changeIndex(item.index);
+          })
+        }, (item: TabItemConfig) => item.index.toString())
+      }
+      .width('92%')
+      .height(58)
+      .padding({ left: 6, right: 6, top: 4, bottom: 4 })
+      .borderRadius(29)
+      .backgroundColor(this.isDark ? 'rgba(28, 24, 42, 0.78)' : 'rgba(255, 255, 255, 0.82)')
+      .backgroundBlurStyle(BlurStyle.Thin)
+      .shadow({
+        radius: 20,
+        color: this.isDark ? 'rgba(0, 0, 0, 0.40)' : 'rgba(168, 135, 74, 0.10)',
+        offsetX: 0,
+        offsetY: 4
+      })
+      .border({
+        width: 1,
+        color: this.isDark ? 'rgba(212, 184, 126, 0.22)' : 'rgba(255, 255, 255, 0.90)'
+      })
+      .margin({ bottom: 18 })
     }
     .width('100%')
     .height('100%')

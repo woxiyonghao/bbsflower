@@ -70,7 +70,7 @@ export class StorageService {
               this.species = data.species && data.species.length > 0 ? data.species : DEFAULT_SPECIES_LIST;
               this.careLogs = data.careLogs || [];
               this.diaries = data.diaries || [];
-              this.themeMode = data.themeMode || 'system';
+              this.themeMode = data.themeMode || 'light';
               loadedSuccessfully = true;
             }
           }
@@ -86,7 +86,7 @@ export class StorageService {
       this.species = JSON.parse(JSON.stringify(DEFAULT_SPECIES_LIST)) as SpeciesModel[];
       this.careLogs = JSON.parse(JSON.stringify(DEFAULT_INITIAL_CARE_LOGS)) as CareLogModel[];
       this.diaries = JSON.parse(JSON.stringify(DEFAULT_INITIAL_DIARIES)) as DiaryModel[];
-      this.themeMode = 'system';
+      this.themeMode = 'light';
       this.saveToStorage();
     }
 
