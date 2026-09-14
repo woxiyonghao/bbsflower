@@ -71,50 +71,56 @@ struct DiaryDetailPage {
 
   build() {
     Column() {
-      // 1. 顶部 Navigation Header
-      Row() {
-        Button('❮ 返回')
-          .fontSize(14)
-          .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
-          .backgroundColor('transparent')
-          .onClick(() => {
-            router.back();
-          })
-
-        Blank()
-
+      // 1. 顶部 Navigation Header (Stack 确保居中)
+      Stack({ alignContent: Alignment.Center }) {
         Text('日记详情')
           .fontSize(17)
           .fontWeight(FontWeight.Bold)
           .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
+          .textAlign(TextAlign.Center)
+          .maxLines(1)
+          .width('60%')
 
-        Blank()
-
-        Row({ space: 8 }) {
-          Button('编辑')
-            .fontSize(13)
+        Row() {
+          Button('❮ 返回')
+            .fontSize(14)
             .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
             .backgroundColor('transparent')
             .onClick(() => {
-              if (this.diary) {
-                router.pushUrl({
-                  url: 'pages/AddDiaryPage',
-                  params: { diaryId: this.diary.id }
-                });
-              }
+              router.back();
             })
 
-          Button('删除')
-            .fontSize(13)
-            .fontColor('#E05252')
-            .backgroundColor('transparent')
-            .onClick(() => {
-              this.deleteDiary();
-            })
+          Blank()
+
+          Row({ space: 8 }) {
+            Button('编辑')
+              .fontSize(13)
+              .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+              .backgroundColor('transparent')
+              .onClick(() => {
+                if (this.diary) {
+                  router.pushUrl({
+                    url: 'pages/AddDiaryPage',
+                    params: { diaryId: this.diary.id }
+                  });
+                }
+              })
+
+            Button('删除')
+              .fontSize(13)
+              .fontColor('#E05252')
+              .backgroundColor('transparent')
+              .onClick(() => {
+                this.deleteDiary();
+              })
+          }
         }
+        .width('100%')
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+      .height(48)
+      .padding({ left: 16, right: 16 })
+      .backgroundColor(this.isDark ? '#140E24' : '#F9F5EE')
 
       // 2. 页面内容
       Scroll() {
@@ -132,7 +138,10 @@ struct DiaryDetailPage {
                       .fontSize(18)
                       .fontWeight(FontWeight.Bold)
                       .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
+                      .maxLines(1)
+                      .textOverflow({ overflow: TextOverflow.Ellipsis })
                   }
+                  .layoutWeight(1)
 
                   Blank()
 

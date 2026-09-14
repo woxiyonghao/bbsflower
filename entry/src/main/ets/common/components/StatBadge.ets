@@ -53,18 +53,19 @@ export struct StatBadge {
   }
 
   build() {
-    Row({ space: 4 }) {
+    Row({ space: 3 }) {
       if (this.icon.length > 0) {
         Text(this.icon)
-          .fontSize(11)
+          .fontSize(10.5)
       }
       Text(this.text)
-        .fontSize(11)
+        .fontSize(10.5)
         .fontWeight(FontWeight.Medium)
         .fontColor(this.getTextColor())
+        .maxLines(1)
     }
-    .padding({ left: 8, right: 8, top: 4, bottom: 4 })
-    .borderRadius(8)
+    .padding({ left: 6, right: 6, top: 3, bottom: 3 })
+    .borderRadius(6)
     .backgroundColor(this.getBgColor())
   }
 }

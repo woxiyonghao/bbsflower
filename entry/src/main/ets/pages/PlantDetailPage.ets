@@ -1,4 +1,5 @@
 import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 import { PlantModel } from '../common/models/PlantModel';
 import { CareLogModel } from '../common/models/CareLogModel';
 import { DiaryModel } from '../common/models/DiaryModel';
@@ -74,59 +75,68 @@ struct PlantDetailPage {
     this.loadData();
   }
 
-  private deletePlant(): void {
-    if (this.plant) {
-      StorageService.getInstance().deletePlant(this.plant.id);
-      router.back();
+  private confirmDeletePlant(): void {
+    if (!this.plant) {
+      return;
     }
+    const plantName = this.plant.nickname;
+    promptAction.showDialog({
+      title: '移出花木确认',
+      message: `确定要将「${plantName}」移出花园吗？相关的日常打卡足迹将一并清除。`,
+      buttons: [
+        { text: '取消', color: this.isDark ? '#A29DC0' : '#8E8AA3' },
+        { text: '确认移出', color: '#E05252' }
+      ]
+    }).then((result) => {
+      if (result.index === 1 && this.plant) {
+        StorageService.getInstance().deletePlant(this.plant.id);
+        promptAction.showToast({ message: `已将「${plantName}」移出花园`, duration: 1500 });
+        setTimeout(() => {
+          router.back();
+        }, 300);
+      }
+    }).catch(() => {});
   }
 
   build() {
     Column() {
-      // 1. 顶部 Navigation Header
-      Row() {
-        Button('❮ 返回')
-          .fontSize(14)
-          .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
-          .backgroundColor('transparent')
-          .onClick(() => {
-            router.back();
-          })
-
-        Blank()
-
+      // 1. 顶部 Navigation Header (Stack 确保标题绝对居中)
+      Stack({ alignContent: Alignment.Center }) {
+        // 绝对居中标题
         Text(this.plant ? this.plant.nickname : '花盆档案')
           .fontSize(17)
           .fontWeight(FontWeight.Bold)
           .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
+          .textAlign(TextAlign.Center)
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+          .width('60%')
 
-        Blank()
-
-        Row({ space: 8 }) {
-          Button('编辑')
-            .fontSize(13)
+        // 两侧导航与操作
+        Row() {
+          Button('❮ 返回')
+            .fontSize(14)
             .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
             .backgroundColor('transparent')
             .onClick(() => {
-              if (this.plant) {
-                router.pushUrl({
-                  url: 'pages/AddPlantPage',
-                  params: { editingPlant: this.plant }
-                });
-              }
+              router.back();
             })
+
+          Blank()
 
           Button('移出')
             .fontSize(13)
             .fontColor('#E05252')
             .backgroundColor('transparent')
             .onClick(() => {
-              this.deletePlant();
+              this.confirmDeletePlant();
             })
         }
+        .width('100%')
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+      .height(48)
+      .padding({ left: 16, right: 16 })
       .backgroundColor(this.isDark ? '#140E24' : '#F9F5EE')
 
       if (this.plant) {
@@ -153,9 +163,11 @@ struct PlantDetailPage {
                     .fontSize(12)
                     .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
 
-                  Row({ space: 6 }) {
+                  Flex({ wrap: FlexWrap.Wrap, direction: FlexDirection.Row }) {
                     StatBadge({ text: this.plant.location, icon: '📍', colorScheme: 'gold', isDark: this.isDark })
+                      .margin({ right: 6, bottom: 4 })
                     StatBadge({ text: this.plant.potSize, icon: '🪴', colorScheme: 'violet', isDark: this.isDark })
+                      .margin({ bottom: 4 })
                   }
                   .margin({ top: 4 })
                 }
@@ -215,48 +227,78 @@ struct PlantDetailPage {
                   .fontWeight(FontWeight.Bold)
                   .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
 
-                Row({ space: 8 }) {
-                  Button('💧 浇水')
-                    .layoutWeight(1)
-                    .height(36)
-                    .fontSize(12)
-                    .fontWeight(FontWeight.Bold)
-                    .backgroundColor(this.isDark ? '#2B4A6F' : '#3577B8')
-                    .borderRadius(12)
-                    .onClick(() => {
-                      this.doCareAction('water', '浇水');
-                    })
+                Row({ space: 6 }) {
+                  Button({ type: ButtonType.Normal, stateEffect: true }) {
+                    Row({ space: 2 }) {
+                      Text('💧').fontSize(11)
+                      Text('浇水')
+                        .fontSize(11)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor('#FFFFFF')
+                    }
+                  }
+                  .layoutWeight(1)
+                  .height(36)
+                  .padding({ left: 2, right: 2 })
+                  .backgroundColor(this.isDark ? '#2B4A6F' : '#3577B8')
+                  .borderRadius(12)
+                  .onClick(() => {
+                    this.doCareAction('water', '浇水');
+                  })
 
-                  Button('🌿 施肥')
-                    .layoutWeight(1)
-                    .height(36)
-                    .fontSize(12)
-                    .fontWeight(FontWeight.Bold)
-                    .backgroundColor(this.isDark ? '#234E45' : '#419B7A')
-                    .borderRadius(12)
-                    .onClick(() => {
-                      this.doCareAction('fertilize', '施肥');
-                    })
+                  Button({ type: ButtonType.Normal, stateEffect: true }) {
+                    Row({ space: 2 }) {
+                      Text('🌿').fontSize(11)
+                      Text('施肥')
+                        .fontSize(11)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor('#FFFFFF')
+                    }
+                  }
+                  .layoutWeight(1)
+                  .height(36)
+                  .padding({ left: 2, right: 2 })
+                  .backgroundColor(this.isDark ? '#234E45' : '#419B7A')
+                  .borderRadius(12)
+                  .onClick(() => {
+                    this.doCareAction('fertilize', '施肥');
+                  })
 
-                  Button('💨 喷雾')
-                    .layoutWeight(1)
-                    .height(36)
-                    .fontSize(12)
-                    .backgroundColor(this.isDark ? '#43346A' : '#7F67B2')
-                    .borderRadius(12)
-                    .onClick(() => {
-                      this.doCareAction('mist', '叶面喷雾');
-                    })
+                  Button({ type: ButtonType.Normal, stateEffect: true }) {
+                    Row({ space: 2 }) {
+                      Text('💨').fontSize(11)
+                      Text('喷雾')
+                        .fontSize(11)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor('#FFFFFF')
+                    }
+                  }
+                  .layoutWeight(1)
+                  .height(36)
+                  .padding({ left: 2, right: 2 })
+                  .backgroundColor(this.isDark ? '#43346A' : '#7F67B2')
+                  .borderRadius(12)
+                  .onClick(() => {
+                    this.doCareAction('mist', '叶面喷雾');
+                  })
 
-                  Button('✂️ 修剪')
-                    .layoutWeight(1)
-                    .height(36)
-                    .fontSize(12)
-                    .backgroundColor(this.isDark ? '#6E4522' : '#B8823B')
-                    .borderRadius(12)
-                    .onClick(() => {
-                      this.doCareAction('prune', '枝叶修剪');
-                    })
+                  Button({ type: ButtonType.Normal, stateEffect: true }) {
+                    Row({ space: 2 }) {
+                      Text('✂️').fontSize(11)
+                      Text('修剪')
+                        .fontSize(11)
+                        .fontWeight(FontWeight.Bold)
+                        .fontColor('#FFFFFF')
+                    }
+                  }
+                  .layoutWeight(1)
+                  .height(36)
+                  .padding({ left: 2, right: 2 })
+                  .backgroundColor(this.isDark ? '#6E4522' : '#B8823B')
+                  .borderRadius(12)
+                  .onClick(() => {
+                    this.doCareAction('prune', '枝叶修剪');
+                  })
                 }
                 .width('100%')
               }
@@ -407,6 +449,34 @@ struct PlantDetailPage {
         .layoutWeight(1)
         .align(Alignment.Top)
         .scrollBar(BarState.Off)
+
+        // 3. 底部操作区：编辑花木档案
+        Row() {
+          Button('✏️ 编辑花木档案')
+            .layoutWeight(1)
+            .height(44)
+            .fontSize(14)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(this.isDark ? '#1C1508' : '#FFFFFF')
+            .backgroundColor(this.isDark ? '#D4B87E' : '#A8874A')
+            .borderRadius(22)
+            .shadow({
+              radius: 10,
+              color: this.isDark ? 'rgba(212, 184, 126, 0.25)' : 'rgba(168, 135, 74, 0.25)',
+              offsetY: 3
+            })
+            .onClick(() => {
+              if (this.plant) {
+                router.pushUrl({
+                  url: 'pages/AddPlantPage',
+                  params: { editingPlant: this.plant }
+                });
+              }
+            })
+        }
+        .width('100%')
+        .padding({ left: 16, right: 16, top: 10, bottom: 18 })
+        .backgroundColor(this.isDark ? '#140E24' : '#F9F5EE')
       }
     }
     .width('100%')

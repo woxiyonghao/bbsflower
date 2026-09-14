@@ -103,9 +103,11 @@ struct SpeciesDetailPage {
                     .fontSize(11.5)
                     .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
 
-                  Row({ space: 6 }) {
+                  Flex({ wrap: FlexWrap.Wrap, direction: FlexDirection.Row }) {
                     StatBadge({ text: `周期~${this.species.suggestWaterDays}天`, icon: '💧', colorScheme: 'blue', isDark: this.isDark })
+                      .margin({ right: 6, bottom: 4 })
                     StatBadge({ text: this.species.categoryName, icon: '🏷️', colorScheme: 'violet', isDark: this.isDark })
+                      .margin({ bottom: 4 })
                   }
                   .margin({ top: 4 })
                 }

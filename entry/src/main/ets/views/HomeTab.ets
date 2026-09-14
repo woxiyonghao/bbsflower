@@ -304,6 +304,8 @@ export struct HomeTab {
                           .fontSize(14)
                           .fontWeight(FontWeight.Bold)
                           .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
+                          .maxLines(1)
+                          .textOverflow({ overflow: TextOverflow.Ellipsis })
                         StatBadge({
                           text: task.statusDesc,
                           colorScheme: task.isOverdue ? 'petal' : 'gold',
@@ -314,6 +316,8 @@ export struct HomeTab {
                       Text(`${task.plantName} · ${task.location}`)
                         .fontSize(11)
                         .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
+                        .maxLines(1)
+                        .textOverflow({ overflow: TextOverflow.Ellipsis })
                     }
                     .alignItems(HorizontalAlign.Start)
                     .layoutWeight(1)

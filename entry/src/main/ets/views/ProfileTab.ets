@@ -226,7 +226,10 @@ export struct ProfileTab {
                             .fontSize(15)
                             .fontWeight(FontWeight.Bold)
                             .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
+                            .maxLines(1)
+                            .textOverflow({ overflow: TextOverflow.Ellipsis })
                         }
+                        .layoutWeight(1)
 
                         Blank()
 

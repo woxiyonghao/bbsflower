@@ -160,13 +160,14 @@ export struct GardenTab {
                       .fontSize(12)
                       .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
 
-                    Row({ space: 6 }) {
+                    Flex({ wrap: FlexWrap.Wrap, direction: FlexDirection.Row }) {
                       StatBadge({
                         text: DateUtil.getRemainingDaysDesc(CareScheduler.getNextWaterDate(plant), DateUtil.formatDate()),
                         icon: '💧',
                         colorScheme: DateUtil.diffDays(CareScheduler.getNextWaterDate(plant), DateUtil.formatDate()) <= 0 ? 'petal' : 'blue',
                         isDark: this.isDark
                       })
+                        .margin({ right: 6, bottom: 2 })
 
                       StatBadge({
                         text: plant.potSize,
@@ -174,6 +175,7 @@ export struct GardenTab {
                         colorScheme: 'violet',
                         isDark: this.isDark
                       })
+                        .margin({ bottom: 2 })
                     }
                     .margin({ top: 2 })
                   }
