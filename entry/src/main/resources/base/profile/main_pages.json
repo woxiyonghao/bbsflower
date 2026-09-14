@@ -5,6 +5,8 @@
     "pages/PlantDetailPage",
     "pages/SpeciesDetailPage",
     "pages/AddDiaryPage",
-    "pages/ShareSummaryPage"
+    "pages/ShareSummaryPage",
+    "pages/RetrofitCarePage",
+    "pages/BackupRestorePage"
   ]
 }

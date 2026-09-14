@@ -1,3 +1,4 @@
+import router from '@ohos.router';
 import { CareLogModel } from '../common/models/CareLogModel';
 import { DiaryModel } from '../common/models/DiaryModel';
 import { PlantModel } from '../common/models/PlantModel';
@@ -17,12 +18,6 @@ export struct CalendarTab {
   @State currentMonth: number = 9;
   @State selectedDateStr: string = '';
 
-  // 补记弹窗状态
-  @State showRetrofitDialog: boolean = false;
-  @State retrofitPlantId: string = '';
-  @State retrofitAction: string = 'water';
-  @State retrofitDateStr: string = '';
-
   private readonly WEEK_HEADERS: string[] = ['日', '一', '二', '三', '四', '五', '六'];
 
   aboutToAppear(): void {
@@ -30,10 +25,6 @@ export struct CalendarTab {
     this.currentYear = today.getFullYear();
     this.currentMonth = today.getMonth() + 1;
     this.selectedDateStr = DateUtil.formatDate(today);
-    this.retrofitDateStr = this.selectedDateStr;
-    if (this.plants.length > 0) {
-      this.retrofitPlantId = this.plants[0].id;
-    }
   }
 
   private prevMonth(): void {
@@ -68,14 +59,6 @@ export struct CalendarTab {
     return this.diaries.filter(d => d.date === this.selectedDateStr);
   }
 
-  private submitRetrofit(): void {
-    const plant = this.plants.find(p => p.id === this.retrofitPlantId);
-    if (plant && this.onAddPastCareLog) {
-      this.onAddPastCareLog(plant, this.retrofitAction, this.retrofitDateStr);
-    }
-    this.showRetrofitDialog = false;
-  }
-
   build() {
     Stack({ alignContent: Alignment.Center }) {
       Scroll() {
@@ -99,12 +82,26 @@ export struct CalendarTab {
               .fontSize(12)
               .fontWeight(FontWeight.Medium)
               .fontColor('#FFFFFF')
-              .backgroundColor(this.isDark ? '#7862B0' : '#8B7AB8')
+              .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
               .borderRadius(14)
               .height(32)
               .padding({ left: 12, right: 12 })
+              .stateStyles({
+                pressed: {
+                  .scale({ x: 0.94, y: 0.94 })
+                  .opacity(0.85)
+                },
+                normal: {
+                  .scale({ x: 1.0, y: 1.0 })
+                  .opacity(1.0)
+                }
+              })
+              .animation({ duration: 150, curve: Curve.EaseOut })
               .onClick(() => {
-                this.showRetrofitDialog = true;
+                router.pushUrl({
+                  url: 'pages/RetrofitCarePage',
+                  params: { date: this.selectedDateStr }
+                });
               })
           }
           .width('100%')
@@ -334,127 +331,6 @@ export struct CalendarTab {
       .width('100%')
       .height('100%')
       .scrollBar(BarState.Off)
-
-      // 补记弹窗 Overlay
-      if (this.showRetrofitDialog) {
-        Stack({ alignContent: Alignment.Center }) {
-          Rect()
-            .width('100%')
-            .height('100%')
-            .fill('rgba(0, 0, 0, 0.65)')
-            .onClick(() => { this.showRetrofitDialog = false; })
-
-          Column({ space: 14 }) {
-            Row() {
-              Text('⏱️ 补记养护打卡')
-                .fontSize(18)
-                .fontWeight(FontWeight.Bold)
-                .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-              Blank()
-              Button('✕')
-                .fontSize(16)
-                .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
-                .backgroundColor('transparent')
-                .onClick(() => { this.showRetrofitDialog = false; })
-            }
-            .width('100%')
-
-            // 选择补记日期
-            Column({ space: 6 }) {
-              Text('补记日期 (YYYY-MM-DD)')
-                .fontSize(12)
-                .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
-              TextInput({ text: this.retrofitDateStr })
-                .fontSize(13)
-                .backgroundColor(this.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)')
-                .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-                .borderRadius(10)
-                .onChange((v: string) => { this.retrofitDateStr = v; })
-            }
-            .alignItems(HorizontalAlign.Start)
-            .width('100%')
-
-            // 选择花盆
-            if (this.plants.length > 0) {
-              Column({ space: 6 }) {
-                Text('选择植物')
-                  .fontSize(12)
-                  .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
-                Scroll() {
-                  Row({ space: 8 }) {
-                    ForEach(this.plants, (plant: PlantModel) => {
-                      Text(`${plant.icon} ${plant.nickname}`)
-                        .fontSize(12)
-                        .fontColor(this.retrofitPlantId === plant.id ? '#FFFFFF' : (this.isDark ? '#DCD8EA' : '#2D2A3F'))
-                        .padding({ left: 10, right: 10, top: 6, bottom: 6 })
-                        .borderRadius(10)
-                        .backgroundColor(
-                          this.retrofitPlantId === plant.id
-                            ? (this.isDark ? '#B8985E' : '#C9A96E')
-                            : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)')
-                        )
-                        .onClick(() => { this.retrofitPlantId = plant.id; })
-                    })
-                  }
-                }
-                .scrollable(ScrollDirection.Horizontal)
-                .scrollBar(BarState.Off)
-              }
-              .alignItems(HorizontalAlign.Start)
-              .width('100%')
-            }
-
-            // 动作类型
-            Row({ space: 10 }) {
-              Button('💧 浇水')
-                .layoutWeight(1)
-                .height(34)
-                .fontSize(12)
-                .fontColor(this.retrofitAction === 'water' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
-                .backgroundColor(this.retrofitAction === 'water' ? '#3577B8' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
-                .borderRadius(10)
-                .onClick(() => { this.retrofitAction = 'water'; })
-
-              Button('🌿 施肥')
-                .layoutWeight(1)
-                .height(34)
-                .fontSize(12)
-                .fontColor(this.retrofitAction === 'fertilize' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
-                .backgroundColor(this.retrofitAction === 'fertilize' ? '#388E6D' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
-                .borderRadius(10)
-                .onClick(() => { this.retrofitAction = 'fertilize'; })
-
-              Button('✂️ 修剪')
-                .layoutWeight(1)
-                .height(34)
-                .fontSize(12)
-                .fontColor(this.retrofitAction === 'prune' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
-                .backgroundColor(this.retrofitAction === 'prune' ? '#B8823B' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
-                .borderRadius(10)
-                .onClick(() => { this.retrofitAction = 'prune'; })
-            }
-            .width('100%')
-
-            // 提交按钮
-            Button('确认补记入册')
-              .width('100%')
-              .height(42)
-              .fontSize(14)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#FFFFFF')
-              .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
-              .borderRadius(14)
-              .margin({ top: 8 })
-              .onClick(() => { this.submitRetrofit(); })
-          }
-          .width('86%')
-          .padding(20)
-          .borderRadius(22)
-          .backgroundColor(this.isDark ? '#1C162E' : '#FFFFFF')
-        }
-        .width('100%')
-        .height('100%')
-      }
     }
     .width('100%')
     .height('100%')

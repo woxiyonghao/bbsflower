@@ -25,9 +25,6 @@ export struct ProfileTab {
   onOpenShareSummary?: () => void;
 
   @State currentSection: string = 'badges'; // 'badges', 'diaries', 'settings'
-  @State showBackupDialog: boolean = false;
-  @State backupJsonText: string = '';
-  @State isExportMode: boolean = true; // true: export, false: import
 
   private getBadges(): BadgeModel[] {
     return BadgeEngine.getAllBadges(this.plants, this.careLogs, this.diaries, this.streakDays);
@@ -289,7 +286,7 @@ export struct ProfileTab {
                     .fontSize(11.5)
                     .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
 
-                  Row({ space: 10 }) {
+                  Row({ space: 8 }) {
                     Button('跟随系统')
                       .fontSize(12)
                       .fontColor(this.themeMode === 'system' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
@@ -297,32 +294,35 @@ export struct ProfileTab {
                       .borderRadius(12)
                       .layoutWeight(1)
                       .height(34)
+                      .padding({ left: 4, right: 4 })
                       .onClick(() => {
                         if (this.onChangeThemeMode) {
                           this.onChangeThemeMode('system');
                         }
                       })
 
-                    Button('☀️ 琉璃暖光')
+                    Button('☀️ 浅色模式')
                       .fontSize(12)
                       .fontColor(this.themeMode === 'light' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
                       .backgroundColor(this.themeMode === 'light' ? '#C9A96E' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
                       .borderRadius(12)
                       .layoutWeight(1)
                       .height(34)
+                      .padding({ left: 4, right: 4 })
                       .onClick(() => {
                         if (this.onChangeThemeMode) {
                           this.onChangeThemeMode('light');
                         }
                       })
 
-                    Button('🌙 沉静夜色')
+                    Button('🌙 深色模式')
                       .fontSize(12)
                       .fontColor(this.themeMode === 'dark' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
-                      .backgroundColor(this.themeMode === 'dark' ? '#5E4A8C' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
+                      .backgroundColor(this.themeMode === 'dark' ? '#B8985E' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
                       .borderRadius(12)
                       .layoutWeight(1)
                       .height(34)
+                      .padding({ left: 4, right: 4 })
                       .onClick(() => {
                         if (this.onChangeThemeMode) {
                           this.onChangeThemeMode('dark');
@@ -351,25 +351,36 @@ export struct ProfileTab {
                     Button('✨ 查看时光回顾卡片')
                       .fontSize(12)
                       .fontColor('#FFFFFF')
-                      .backgroundColor(this.isDark ? '#305480' : '#3A7EC2')
+                      .backgroundColor(this.isDark ? '#2B584B' : '#3E7B68')
                       .borderRadius(12)
                       .layoutWeight(1)
                       .height(36)
+                      .padding({ left: 4, right: 4 })
                       .onClick(() => {
                         router.pushUrl({ url: 'pages/ShareSummaryPage' });
                       })
 
-                    Button('📥 导入备份')
+                    Button('📥 数据备份与恢复')
                       .fontSize(12)
                       .fontColor('#FFFFFF')
-                      .backgroundColor(this.isDark ? '#43346A' : '#7F67B2')
+                      .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
                       .borderRadius(12)
                       .layoutWeight(1)
                       .height(36)
+                      .padding({ left: 4, right: 4 })
+                      .stateStyles({
+                        pressed: {
+                          .scale({ x: 0.96, y: 0.96 })
+                          .opacity(0.85)
+                        },
+                        normal: {
+                          .scale({ x: 1.0, y: 1.0 })
+                          .opacity(1.0)
+                        }
+                      })
+                      .animation({ duration: 150, curve: Curve.EaseOut })
                       .onClick(() => {
-                        this.isExportMode = false;
-                        this.backupJsonText = '';
-                        this.showBackupDialog = true;
+                        router.pushUrl({ url: 'pages/BackupRestorePage' });
                       })
                   }
                   .width('100%')
@@ -422,90 +433,8 @@ export struct ProfileTab {
       .width('100%')
       .height('100%')
       .scrollBar(BarState.Off)
-
-      // 备份导出/导入弹窗
-      if (this.showBackupDialog) {
-        Stack({ alignContent: Alignment.Center }) {
-          Rect()
-            .width('100%')
-            .height('100%')
-            .fill('rgba(0, 0, 0, 0.65)')
-            .onClick(() => { this.showBackupDialog = false; })
-
-          Column({ space: 14 }) {
-            Row() {
-              Text(this.isExportMode ? '📦 导出备份 JSON' : '📥 导入恢复数据')
-                .fontSize(17)
-                .fontWeight(FontWeight.Bold)
-                .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-
-              Blank()
-
-              Button('✕')
-                .fontSize(16)
-                .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
-                .backgroundColor('transparent')
-                .onClick(() => { this.showBackupDialog = false; })
-            }
-            .width('100%')
-
-            Text(this.isExportMode ? '以下为全量花园、打卡与日记数据，请复制保存：' : '请粘贴您备份的 JSON 字符串：')
-              .fontSize(12)
-              .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
-
-            TextArea({ text: this.backupJsonText })
-              .fontSize(11)
-              .height(180)
-              .backgroundColor(this.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)')
-              .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
-              .borderRadius(10)
-              .onChange((v: string) => { this.backupJsonText = v; })
-
-            Row({ space: 10 }) {
-              Button('关闭')
-                .layoutWeight(1)
-                .height(38)
-                .fontSize(13)
-                .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
-                .backgroundColor(this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)')
-                .borderRadius(12)
-                .onClick(() => { this.showBackupDialog = false; })
-
-              if (!this.isExportMode) {
-                Button('确认导入')
-                  .layoutWeight(1)
-                  .height(38)
-                  .fontSize(13)
-                  .fontWeight(FontWeight.Bold)
-                  .fontColor('#FFFFFF')
-                  .backgroundColor(this.isDark ? '#B8985E' : '#C9A96E')
-                  .borderRadius(12)
-                  .onClick(() => {
-                    if (this.onImportData && this.backupJsonText.trim().length > 0) {
-                      this.onImportData(this.backupJsonText);
-                    }
-                    this.showBackupDialog = false;
-                  })
-              }
-            }
-            .width('100%')
-          }
-          .width('88%')
-          .padding(20)
-          .borderRadius(22)
-          .backgroundColor(this.isDark ? '#1C162E' : '#FFFFFF')
-        }
-        .width('100%')
-        .height('100%')
-      }
     }
     .width('100%')
     .height('100%')
-  }
-
-  public showExportDialogWithText(jsonStr: string): void {
-    this.isExportMode = true;
-    this.backupJsonText = jsonStr;
-    this.showBackupDialog = true;
   }
 }
