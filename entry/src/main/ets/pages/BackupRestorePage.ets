@@ -217,9 +217,12 @@ struct BackupRestorePage {
             }
           }
         }
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
         .padding({ left: 16, right: 16, top: 14, bottom: 24 })
       }
       .layoutWeight(1)
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')
@@ -228,11 +231,17 @@ struct BackupRestorePage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

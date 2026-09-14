@@ -1,4 +1,5 @@
 import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 import { DiaryModel } from '../common/models/DiaryModel';
 import { PlantModel } from '../common/models/PlantModel';
 import { StorageService } from '../common/database/StorageService';
@@ -9,6 +10,7 @@ import { GlassCard } from '../common/components/GlassCard';
 
 interface AddDiaryPageParams {
   defaultPlantId?: string;
+  editingDiary?: DiaryModel;
 }
 
 interface TagOption {
@@ -21,6 +23,7 @@ interface TagOption {
 struct AddDiaryPage {
   @State isDark: boolean = false;
   @State plants: PlantModel[] = [];
+  @State editingDiary: DiaryModel | null = null;
   @State selectedPlantId: string = '';
   @State title: string = '';
   @State content: string = '';
@@ -42,35 +45,67 @@ struct AddDiaryPage {
     this.plants = StorageService.getInstance().getPlants();
 
     const params = router.getParams() as AddDiaryPageParams;
-    if (params && params.defaultPlantId) {
-      this.selectedPlantId = params.defaultPlantId;
-    } else if (this.plants.length > 0) {
+    if (params) {
+      if (params.editingDiary) {
+        this.editingDiary = params.editingDiary;
+        this.title = params.editingDiary.title;
+        this.content = params.editingDiary.content;
+        this.selectedTag = params.editingDiary.tag;
+        this.selectedMood = params.editingDiary.mood;
+        this.selectedPlantId = params.editingDiary.plantId;
+      } else if (params.defaultPlantId) {
+        this.selectedPlantId = params.defaultPlantId;
+      }
+    }
+    if (!this.selectedPlantId && this.plants.length > 0) {
       this.selectedPlantId = this.plants[0].id;
     }
   }
 
   private submit(): void {
     if (this.title.trim().length === 0) {
+      promptAction.showToast({ message: '请填写日记标题' });
       return;
     }
 
     const currentPlant = this.plants.find(p => p.id === this.selectedPlantId);
     const tagObj = this.TAG_OPTIONS.find(t => t.key === this.selectedTag);
 
-    const diary: DiaryModel = {
-      id: `dry_${Date.now()}`,
-      plantId: this.selectedPlantId,
-      plantName: currentPlant ? currentPlant.nickname : '花园随笔',
-      title: this.title,
-      content: this.content,
-      date: DateUtil.formatDate(),
-      time: DateUtil.formatTime(),
-      tag: this.selectedTag,
-      tagName: tagObj ? tagObj.name : '日常观察',
-      mood: this.selectedMood
-    };
-
-    StorageService.getInstance().addDiary(diary);
+    if (this.editingDiary) {
+      const updated: DiaryModel = {
+        id: this.editingDiary.id,
+        plantId: this.selectedPlantId,
+        plantName: currentPlant ? currentPlant.nickname : this.editingDiary.plantName,
+        title: this.title,
+        content: this.content,
+        date: this.editingDiary.date,
+        time: this.editingDiary.time,
+        tag: this.selectedTag,
+        tagName: tagObj ? tagObj.name : this.editingDiary.tagName,
+        mood: this.selectedMood
+      };
+      StorageService.getInstance().updateDiary(updated);
+      try {
+        promptAction.showToast({ message: '✨ 日记手记已更新' });
+      } catch (e) {}
+    } else {
+      const diary: DiaryModel = {
+        id: `dry_${Date.now()}`,
+        plantId: this.selectedPlantId,
+        plantName: currentPlant ? currentPlant.nickname : '花园随笔',
+        title: this.title,
+        content: this.content,
+        date: DateUtil.formatDate(),
+        time: DateUtil.formatTime(),
+        tag: this.selectedTag,
+        tagName: tagObj ? tagObj.name : '日常观察',
+        mood: this.selectedMood
+      };
+      StorageService.getInstance().addDiary(diary);
+      try {
+        promptAction.showToast({ message: '✨ 日记手记已珍藏入册' });
+      } catch (e) {}
+    }
     router.back();
   }
 
@@ -88,7 +123,7 @@ struct AddDiaryPage {
 
         Blank()
 
-        Text('记篇成长日记')
+        Text(this.editingDiary ? '编辑成长手记' : '记篇成长日记')
           .fontSize(17)
           .fontWeight(FontWeight.Bold)
           .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
@@ -246,7 +281,7 @@ struct AddDiaryPage {
           }
 
           // 底部写好了按钮
-          Button('写下这抹绿意')
+          Button(this.editingDiary ? '保存手记修改' : '写下这抹绿意')
             .width('100%')
             .height(46)
             .fontSize(15)
@@ -270,9 +305,12 @@ struct AddDiaryPage {
               this.submit();
             })
         }
-        .padding({ left: 16, right: 16, top: 12 })
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+        .padding({ left: 16, right: 16, top: 12, bottom: 24 })
       }
       .layoutWeight(1)
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')
@@ -281,11 +319,17 @@ struct AddDiaryPage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

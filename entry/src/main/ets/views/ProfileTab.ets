@@ -266,6 +266,12 @@ export struct ProfileTab {
                     }
                     .alignItems(HorizontalAlign.Start)
                     .width('100%')
+                    .onClick(() => {
+                      router.pushUrl({
+                        url: 'pages/DiaryDetailPage',
+                        params: { diaryId: diary.id }
+                      });
+                    })
                   }
                 })
               }
@@ -432,6 +438,7 @@ export struct ProfileTab {
       }
       .width('100%')
       .height('100%')
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')

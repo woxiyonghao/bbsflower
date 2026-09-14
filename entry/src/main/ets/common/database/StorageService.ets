@@ -191,8 +191,23 @@ export class StorageService {
     return this.diaries;
   }
 
+  public getDiaryById(id: string): DiaryModel | null {
+    const found = this.diaries.find(d => d.id === id);
+    return found ? found : null;
+  }
+
   public addDiary(diary: DiaryModel): void {
     this.diaries.unshift(diary);
+    this.saveToStorage();
+  }
+
+  public updateDiary(diary: DiaryModel): void {
+    const idx = this.diaries.findIndex(d => d.id === diary.id);
+    if (idx >= 0) {
+      this.diaries[idx] = diary;
+    } else {
+      this.diaries.unshift(diary);
+    }
     this.saveToStorage();
   }
 

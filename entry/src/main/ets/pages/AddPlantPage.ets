@@ -1,4 +1,5 @@
 import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 import { PlantModel } from '../common/models/PlantModel';
 import { SpeciesModel } from '../common/models/SpeciesModel';
 import { StorageService } from '../common/database/StorageService';
@@ -103,6 +104,9 @@ struct AddPlantPage {
     };
 
     StorageService.getInstance().savePlant(finalPlant);
+    try {
+      promptAction.showToast({ message: `✨ 已成功收进我的花园「${finalPlant.nickname}」` });
+    } catch (e) {}
     router.back();
   }
 
@@ -400,9 +404,12 @@ struct AddPlantPage {
               this.submit();
             })
         }
-        .padding({ left: 16, right: 16, top: 12 })
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+        .padding({ left: 16, right: 16, top: 12, bottom: 24 })
       }
       .layoutWeight(1)
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')
@@ -411,11 +418,17 @@ struct AddPlantPage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

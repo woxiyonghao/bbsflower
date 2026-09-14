@@ -60,7 +60,7 @@ export struct CalendarTab {
   }
 
   build() {
-    Stack({ alignContent: Alignment.Center }) {
+    Stack({ alignContent: Alignment.TopStart }) {
       Scroll() {
         Column({ space: 16 }) {
           // 1. 顶部 Header 与月份选择
@@ -293,6 +293,14 @@ export struct CalendarTab {
                         .fontColor(this.isDark ? '#736F90' : '#8E8AA3')
                     }
                     .width('100%')
+                    .onClick(() => {
+                      if (log.plantId) {
+                        router.pushUrl({
+                          url: 'pages/PlantDetailPage',
+                          params: { plantId: log.plantId }
+                        });
+                      }
+                    })
                   }
                 })
 
@@ -317,6 +325,12 @@ export struct CalendarTab {
                     }
                     .width('100%')
                     .alignItems(HorizontalAlign.Start)
+                    .onClick(() => {
+                      router.pushUrl({
+                        url: 'pages/DiaryDetailPage',
+                        params: { diaryId: diary.id }
+                      });
+                    })
                   }
                 })
               }
@@ -330,6 +344,7 @@ export struct CalendarTab {
       }
       .width('100%')
       .height('100%')
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')

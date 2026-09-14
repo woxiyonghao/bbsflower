@@ -16,6 +16,7 @@ struct SpeciesDetailPage {
   @State isDark: boolean = false;
   @State speciesId: string = '';
   @State species: SpeciesModel | null = null;
+  @State isInGarden: boolean = false;
 
   aboutToAppear(): void {
     this.isDark = ThemeManager.getInstance().isDark();
@@ -23,12 +24,24 @@ struct SpeciesDetailPage {
     if (params && params.speciesId) {
       this.speciesId = params.speciesId;
       this.species = StorageService.getInstance().getSpeciesById(this.speciesId);
+      this.checkInGarden();
+    }
+  }
+
+  onPageShow(): void {
+    this.checkInGarden();
+  }
+
+  private checkInGarden(): void {
+    if (this.species) {
+      const plants = StorageService.getInstance().getPlants();
+      this.isInGarden = plants.some(p => p.speciesId === this.species?.id || p.name === this.species?.name);
     }
   }
 
   private addToGarden(): void {
     if (this.species) {
-      router.pushUrl({
+      router.replaceUrl({
         url: 'pages/AddPlantPage',
         params: { presetSpecies: this.species }
       });
@@ -270,7 +283,7 @@ struct SpeciesDetailPage {
             }
 
             // 底部一键收进花园
-            Button('🪴 一键将此品种收进我的花园')
+            Button(this.isInGarden ? '🪴 花园已有此花木 · 再次添置一盆' : '🪴 一键将此品种收进我的花园')
               .width('100%')
               .height(46)
               .fontSize(15)
@@ -294,9 +307,12 @@ struct SpeciesDetailPage {
                 this.addToGarden();
               })
           }
+          .width('100%')
+          .justifyContent(FlexAlign.Start)
           .padding({ left: 16, right: 16, top: 12 })
         }
         .layoutWeight(1)
+        .align(Alignment.Top)
         .scrollBar(BarState.Off)
       }
     }
@@ -306,11 +322,17 @@ struct SpeciesDetailPage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

@@ -108,74 +108,78 @@ struct ShareSummaryPage {
                       .fontSize(11.5)
                       .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
                   }
+                  .alignItems(HorizontalAlign.Start)
                   .padding(14)
                   .borderRadius(16)
-                  .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.12)' : '#FDF4E5')
-                  .width('100%')
+                  .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.12)' : '#FBF7EE')
                 }
 
-                // 花园在养
+                // 在养花草
                 GridCol() {
                   Column({ space: 4 }) {
                     Text(`${this.plants.length} 株`)
                       .fontSize(26)
                       .fontWeight(FontWeight.Bold)
-                      .fontColor(this.isDark ? '#8EE0D0' : '#388E6D')
+                      .fontColor(this.isDark ? '#6BB89C' : '#3E8C6C')
                     Text('花园常伴植物')
                       .fontSize(11.5)
                       .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
                   }
+                  .alignItems(HorizontalAlign.Start)
                   .padding(14)
                   .borderRadius(16)
-                  .backgroundColor(this.isDark ? 'rgba(110, 220, 200, 0.12)' : '#E8F7F2')
-                  .width('100%')
+                  .backgroundColor(this.isDark ? 'rgba(62, 140, 108, 0.12)' : '#EDF6F2')
                 }
 
-                // 累计滋润
+                // 累计浇灌打卡
                 GridCol() {
                   Column({ space: 4 }) {
                     Text(`${this.careLogs.length} 次`)
                       .fontSize(26)
                       .fontWeight(FontWeight.Bold)
-                      .fontColor(this.isDark ? '#9CC8F0' : '#3577B8')
+                      .fontColor(this.isDark ? '#7AAEE0' : '#3B7EBD')
                     Text('甘霖浇灌打卡')
                       .fontSize(11.5)
                       .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
                   }
+                  .alignItems(HorizontalAlign.Start)
                   .padding(14)
                   .borderRadius(16)
-                  .backgroundColor(this.isDark ? 'rgba(120, 180, 240, 0.12)' : '#EBF4FC')
-                  .width('100%')
+                  .backgroundColor(this.isDark ? 'rgba(59, 126, 189, 0.12)' : '#EEF4FA')
                 }
 
-                // 观察心得
+                // 成长手记
                 GridCol() {
                   Column({ space: 4 }) {
                     Text(`${this.diaries.length} 篇`)
                       .fontSize(26)
                       .fontWeight(FontWeight.Bold)
-                      .fontColor(this.isDark ? '#F0B8D0' : '#B3587E')
+                      .fontColor(this.isDark ? '#E592A4' : '#C75D74')
                     Text('草木成长手记')
                       .fontSize(11.5)
                       .fontColor(this.isDark ? '#A29DC0' : '#6B6780')
                   }
+                  .alignItems(HorizontalAlign.Start)
                   .padding(14)
                   .borderRadius(16)
-                  .backgroundColor(this.isDark ? 'rgba(232, 160, 191, 0.12)' : '#FDF0F5')
-                  .width('100%')
+                  .backgroundColor(this.isDark ? 'rgba(199, 93, 116, 0.12)' : '#FAEFF2')
                 }
               }
               .width('100%')
 
-              // 心尖挚爱花木展示
+              // 心尖挚爱花草
               if (this.getFavoritePlant()) {
-                Row({ space: 14 }) {
-                  PlantIcon({ plantName: this.getFavoritePlant()?.name || '', sizeVal: 52, isDark: this.isDark })
+                Row({ space: 12 }) {
+                  PlantIcon({
+                    plantName: this.getFavoritePlant()?.name || '绿萝',
+                    sizeVal: 52,
+                    isDark: this.isDark
+                  })
 
-                  Column({ space: 3 }) {
+                  Column({ space: 4 }) {
                     Text('心尖挚爱花草')
-                      .fontSize(11.5)
-                      .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                      .fontSize(11)
+                      .fontColor(this.isDark ? '#D4B87E' : '#C9A96E')
                     Text(`「${this.getFavoritePlant()?.nickname}」`)
                       .fontSize(16)
                       .fontWeight(FontWeight.Bold)
@@ -238,9 +242,12 @@ struct ShareSummaryPage {
             }
           }
         }
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
         .padding({ left: 16, right: 16, top: 12, bottom: 24 })
       }
       .layoutWeight(1)
+      .align(Alignment.Top)
       .scrollBar(BarState.Off)
     }
     .width('100%')
@@ -249,11 +256,17 @@ struct ShareSummaryPage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

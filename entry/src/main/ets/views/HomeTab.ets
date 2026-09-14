@@ -2,7 +2,8 @@ import router from '@ohos.router';
 import { PlantModel } from '../common/models/PlantModel';
 import { CareLogModel } from '../common/models/CareLogModel';
 import { DiaryModel } from '../common/models/DiaryModel';
-import { DAILY_QUOTES, DailyQuote } from '../common/constants/DefaultWikiData';
+import { DAILY_QUOTES, DailyQuote, DEFAULT_SPECIES_LIST } from '../common/constants/DefaultWikiData';
+import { SpeciesModel } from '../common/models/SpeciesModel';
 import { DateUtil } from '../common/utils/DateUtil';
 import { CareScheduler, CareTaskItem } from '../common/utils/CareScheduler';
 import { PlantIcon } from '../common/components/PlantIcon';
@@ -155,6 +156,16 @@ export struct HomeTab {
             .width('100%')
           }
           .width('100%')
+          .onClick(() => {
+            const flower: string = DAILY_QUOTES[this.quoteIndex].flower;
+            const match: SpeciesModel | undefined = DEFAULT_SPECIES_LIST.find((s: SpeciesModel): boolean => s.name === flower || flower.indexOf(s.name) >= 0 || s.name.indexOf(flower) >= 0);
+            if (match) {
+              router.pushUrl({
+                url: 'pages/SpeciesDetailPage',
+                params: { speciesId: match.id }
+              });
+            }
+          })
         }
 
         // 3. 核心统计看板
@@ -306,6 +317,14 @@ export struct HomeTab {
                     }
                     .alignItems(HorizontalAlign.Start)
                     .layoutWeight(1)
+                    .onClick(() => {
+                      if (task.plantId) {
+                        router.pushUrl({
+                          url: 'pages/PlantDetailPage',
+                          params: { plantId: task.plantId }
+                        });
+                      }
+                    })
 
                     Button(`完成${task.actionName}`)
                       .fontSize(12)
@@ -519,6 +538,14 @@ export struct HomeTab {
               .padding({ top: 8, bottom: 8 })
               .borderWidth({ bottom: 1 })
               .borderColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)')
+              .onClick(() => {
+                if (log.plantId) {
+                  router.pushUrl({
+                    url: 'pages/PlantDetailPage',
+                    params: { plantId: log.plantId }
+                  });
+                }
+              })
             })
           }
           .width('100%')
@@ -530,6 +557,7 @@ export struct HomeTab {
     }
     .width('100%')
     .height('100%')
+    .align(Alignment.Top)
     .scrollBar(BarState.Off)
   }
 }

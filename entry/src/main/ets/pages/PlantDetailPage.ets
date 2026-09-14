@@ -344,6 +344,12 @@ struct PlantDetailPage {
                     }
                     .alignItems(HorizontalAlign.Start)
                     .width('100%')
+                    .onClick(() => {
+                      router.pushUrl({
+                        url: 'pages/DiaryDetailPage',
+                        params: { diaryId: diary.id }
+                      });
+                    })
                   }
                 })
               }
@@ -358,25 +364,24 @@ struct PlantDetailPage {
                 .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
 
               if (this.careLogs.length === 0) {
-                GlassCard({ isDark: this.isDark, radius: 16, paddingVal: 16 }) {
-                  Text('暂无养护打卡记录')
-                    .fontSize(12)
+                GlassCard({ isDark: this.isDark, radius: 16, paddingVal: 20 }) {
+                  Text('暂未记录养护足迹，点击上方快捷动作完成第一次打卡。')
+                    .fontSize(12.5)
                     .fontColor(this.isDark ? '#736F90' : '#8E8AA3')
                     .textAlign(TextAlign.Center)
                     .width('100%')
                 }
               } else {
-                ForEach(this.careLogs.slice(0, 10), (log: CareLogModel) => {
-                  GlassCard({ isDark: this.isDark, radius: 12, paddingVal: 10 }) {
-                    Row() {
+                ForEach(this.careLogs, (log: CareLogModel) => {
+                  GlassCard({ isDark: this.isDark, radius: 14, paddingVal: 12 }) {
+                    Row({ space: 8 }) {
                       Text(log.actionType === 'water' ? '💧' : (log.actionType === 'fertilize' ? '🌿' : '✂️'))
-                        .fontSize(16)
-                        .margin({ right: 8 })
+                        .fontSize(14)
 
                       Text(log.actionName)
                         .fontSize(13)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                        .fontColor(this.isDark ? '#F2EFF9' : '#2D2A3F')
 
                       if (log.note && log.note.length > 0) {
                         Text(` - ${log.note}`)
@@ -400,6 +405,7 @@ struct PlantDetailPage {
           .padding({ left: 16, right: 16, top: 12, bottom: 24 })
         }
         .layoutWeight(1)
+        .align(Alignment.Top)
         .scrollBar(BarState.Off)
       }
     }
@@ -409,11 +415,17 @@ struct PlantDetailPage {
   }
 
   pageTransition() {
-    PageTransitionEnter({ duration: 280, curve: Curve.EaseInOut })
-      .slide(SlideEffect.Right)
-      .opacity(0)
-    PageTransitionExit({ duration: 220, curve: Curve.EaseInOut })
+    PageTransitionEnter({ type: RouteType.Push, duration: 280, curve: Curve.EaseOut })
       .slide(SlideEffect.Left)
-      .opacity(0)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Pop, duration: 240, curve: Curve.EaseIn })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionEnter({ type: RouteType.Pop, duration: 240, curve: Curve.EaseOut })
+      .slide(SlideEffect.Right)
+      .opacity(0.8)
+    PageTransitionExit({ type: RouteType.Push, duration: 280, curve: Curve.EaseIn })
+      .slide(SlideEffect.Left)
+      .opacity(0.8)
   }
 }

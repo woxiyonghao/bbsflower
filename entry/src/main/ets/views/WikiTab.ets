@@ -233,6 +233,7 @@ export struct WikiTab {
           .padding({ left: 16, right: 16, bottom: 96 })
         }
         .layoutWeight(1)
+        .align(Alignment.Top)
         .scrollBar(BarState.Off)
       }
     }
