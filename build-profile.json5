@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storeFile": "/Users/mk10/Desktop/bbs/cers/bbsdrink.p12",
+          "storePassword": "00000019F407272FA7E7416D78C7E6343212A4F3D1133AA3E8BD7DD5A1B1CC185409A3B51BD39D339A",
+          "keyAlias": "bbsdrink",
+          "keyPassword": "0000001982C208FC74B761428005CB67947A9AE10248449C420023A87D982E061FA31E897F0061E955",
+          "signAlg": "SHA256withECDSA",
+          "profile": "/Users/mk10/Desktop/bbsflower/bbsflower_profile_releaseRelease.p7b",
+          "certpath": "/Users/mk10/Desktop/bbs/cers/bbsdrink_cer.cer"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
