@@ -267,7 +267,7 @@ export default function traversalTest() {
       await sleep(300);
       await typeInto('TextArea', 0, '草木有本心，静守岁月长');
       await sleep(300);
-      expect(await tap('保存')).assertTrue();
+      expect(await tap('确认保存资料')).assertTrue();
       expect(await waitFor('青木花圃', 6000)).assertTrue();
       await shot('TR-18_profile_saved');
     });

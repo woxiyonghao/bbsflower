@@ -38,9 +38,9 @@ struct EditProfilePage {
       return;
     }
 
-    if (trimmedNickname.length > 16) {
+    if (trimmedNickname.length > 8) {
       try {
-        promptAction.showToast({ message: '昵称最多 16 个字' });
+        promptAction.showToast({ message: '昵称最多 8 个字' });
       } catch (e) {}
       return;
     }
@@ -86,19 +86,7 @@ struct EditProfilePage {
           .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
-          .margin({ right: 16 })
-
-        Button('保存')
-          .fontSize(14)
-          .fontWeight(FontWeight.Bold)
-          .fontColor(this.isDark ? '#1F1B33' : '#FFFFFF')
-          .backgroundColor(this.isDark ? '#D4B87E' : '#C9A96E')
-          .borderRadius(16)
-          .height(32)
-          .padding({ left: 14, right: 14 })
-          .onClick(() => {
-            this.handleSave();
-          })
+          .margin({ right: 60 })
       }
       .width('100%')
       .padding({ left: 16, right: 16, top: 12, bottom: 12 })
@@ -195,7 +183,7 @@ struct EditProfilePage {
                   .fontWeight(FontWeight.Bold)
                   .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
                 Blank()
-                Text(`${this.nickname.length}/16`)
+                Text(`${this.nickname.length}/8`)
                   .fontSize(12)
                   .fontColor(this.isDark ? '#8A85A4' : '#8E8AA3')
               }
@@ -205,7 +193,7 @@ struct EditProfilePage {
                 .placeholderColor(this.isDark ? '#6B6780' : '#A29DC0')
                 .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
                 .fontSize(15)
-                .maxLength(16)
+                .maxLength(8)
                 .backgroundColor(this.isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)')
                 .borderRadius(14)
                 .height(46)
@@ -214,7 +202,7 @@ struct EditProfilePage {
                   this.nickname = value;
                 })
 
-              Text('展示在雅舍主页及日记签名处，支持 1~16 个字符。')
+              Text('展示在雅舍主页及日记签名处，支持 1~8 个字符。')
                 .fontSize(11)
                 .fontColor(this.isDark ? '#8A85A4' : '#8E8AA3')
             }

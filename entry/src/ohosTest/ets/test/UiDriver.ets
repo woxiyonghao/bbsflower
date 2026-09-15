@@ -66,7 +66,18 @@ export async function waitFor(txt: string, timeout: number = 6000, contains: boo
 }
 
 export async function tap(txt: string, contains: boolean = false): Promise<boolean> {
-  const c: Component | null = await findText(txt, contains);
+  let c: Component | null = await findText(txt, contains);
+  if (c === null) {
+    try {
+      const size = await drv().getDisplaySize();
+      const midX = Math.floor(size.x / 2);
+      const startY = Math.floor(size.y * 0.7);
+      const endY = Math.floor(size.y * 0.3);
+      await drv().swipe(midX, startY, midX, endY, 600);
+      await sleep(600);
+      c = await findText(txt, contains);
+    } catch (e) {}
+  }
   if (c === null) {
     return false;
   }
