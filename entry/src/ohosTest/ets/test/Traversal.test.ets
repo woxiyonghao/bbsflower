@@ -152,6 +152,7 @@ export default function traversalTest() {
       logStep('TR-12 百科：分类筛选 + 要点详情');
       await goto('百科');
       expect(await waitFor('百花图鉴', 5000)).assertTrue();
+      expect(await exists('预置 120 种名花养护宝典 · 离线随时查阅')).assertTrue();
       expect(await tap('🌸 观花花卉')).assertTrue();
       await sleep(600);
       expect(await exists('百花图鉴')).assertTrue();

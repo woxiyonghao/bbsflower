@@ -67,6 +67,7 @@ export class StorageService {
     }
 
     let loadedSuccessfully = false;
+    let needResave = false;
     if (this.context && this.context.filesDir) {
       try {
         const filePath = `${this.context.filesDir}/${this.DATA_FILE_NAME}`;
@@ -76,7 +77,23 @@ export class StorageService {
             const data = JSON.parse(jsonStr) as AppDataPayload;
             if (data && data.plants) {
               this.plants = data.plants;
-              this.species = data.species && data.species.length > 0 ? data.species : DEFAULT_SPECIES_LIST;
+              const storedSpecies: SpeciesModel[] = data.species && data.species.length > 0 ? data.species : [];
+              if (storedSpecies.length < DEFAULT_SPECIES_LIST.length) {
+                const existingIdMap = new Map<string, boolean>();
+                for (let i = 0; i < storedSpecies.length; i++) {
+                  existingIdMap.set(storedSpecies[i].id, true);
+                }
+                for (let i = 0; i < DEFAULT_SPECIES_LIST.length; i++) {
+                  const sp = DEFAULT_SPECIES_LIST[i];
+                  if (!existingIdMap.has(sp.id)) {
+                    storedSpecies.push(sp);
+                  }
+                }
+                this.species = storedSpecies;
+                needResave = true;
+              } else {
+                this.species = storedSpecies;
+              }
               this.careLogs = data.careLogs || [];
               this.diaries = data.diaries || [];
               this.themeMode = data.themeMode || 'light';
@@ -110,6 +127,8 @@ export class StorageService {
         nickname: DEFAULT_USER_PROFILE.nickname,
         bio: DEFAULT_USER_PROFILE.bio
       };
+      this.saveToStorage();
+    } else if (needResave) {
       this.saveToStorage();
     }
 

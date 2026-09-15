@@ -125,6 +125,14 @@ export struct WikiTab {
             .borderRadius(14)
             .height(30)
             .onClick(() => { this.selectedCategory = 'bulb'; })
+
+          Button('🌿 芳香藤木')
+            .fontSize(12)
+            .fontColor(this.selectedCategory === 'herb' ? '#FFFFFF' : (this.isDark ? '#A29DC0' : '#6B6780'))
+            .backgroundColor(this.selectedCategory === 'herb' ? '#2E7D32' : (this.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'))
+            .borderRadius(14)
+            .height(30)
+            .onClick(() => { this.selectedCategory = 'herb'; })
         }
         .padding({ left: 16, right: 16, bottom: 8 })
       }
@@ -147,13 +155,13 @@ export struct WikiTab {
           }
         })
       } else {
-        Scroll() {
-          Column({ space: 12 }) {
-            ForEach(this.getFilteredSpecies(), (sp: SpeciesModel) => {
+        List({ space: 12 }) {
+          ForEach(this.getFilteredSpecies(), (sp: SpeciesModel) => {
+            ListItem() {
               GlassCard({ isDark: this.isDark, radius: 20, paddingVal: 16 }) {
                 Row({ space: 14 }) {
                   // 图标
-                  PlantIcon({ plantName: sp.name, sizeVal: 48, isDark: this.isDark })
+                  PlantIcon({ plantName: sp.name, customIcon: sp.icon, sizeVal: 48, isDark: this.isDark })
 
                   // 信息
                   Column({ space: 4 }) {
@@ -214,7 +222,7 @@ export struct WikiTab {
                         });
                       })
 
-                    Text('要点 ❯')
+                    Text('要点')
                       .fontSize(11)
                       .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
                   }
@@ -228,12 +236,13 @@ export struct WikiTab {
                   });
                 })
               }
-            })
-          }
-          .padding({ left: 16, right: 16, bottom: 96 })
+            }
+          }, (sp: SpeciesModel) => sp.id)
         }
         .layoutWeight(1)
-        .align(Alignment.Top)
+        .width('100%')
+        .padding({ left: 16, right: 16, bottom: 96 })
+        .edgeEffect(EdgeEffect.Spring)
         .scrollBar(BarState.Off)
       }
     }

@@ -209,6 +209,7 @@ export struct PlantIcon {
   @Prop sizeVal: number = 44; // 容器尺寸：28, 36, 44, 56, 72 等
   @Prop isDark: boolean = false;
   @Prop showSubBadge: boolean = true;
+  @Prop customIcon: string = '';
 
   private getConf(): PlantVisualConfig {
     return PlantIconProvider.getConfig(this.plantName);
@@ -218,7 +219,7 @@ export struct PlantIcon {
     Stack({ alignContent: Alignment.BottomEnd }) {
       // 1. 底盘容器
       Column() {
-        Text(this.getConf().badgeSymbol)
+        Text(this.customIcon ? this.customIcon : this.getConf().badgeSymbol)
           .fontSize(this.sizeVal * 0.52)
       }
       .width(this.sizeVal)
