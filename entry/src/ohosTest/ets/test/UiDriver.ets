@@ -6,7 +6,7 @@ import { Driver, ON, Component, MatchPattern } from '@ohos.UiTest';
 import { abilityDelegatorRegistry } from '@kit.TestKit';
 import { expect } from '@ohos/hypium';
 
-export const BUNDLE: string = 'com.winheo.bbsdrink';
+export const BUNDLE: string = 'com.winheo.bbsflower';
 export const MODULE: string = 'entry';
 export const ABILITY: string = 'EntryAbility';
 

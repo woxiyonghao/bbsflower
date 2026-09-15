@@ -5,6 +5,7 @@ import { PlantModel } from '../common/models/PlantModel';
 import { SpeciesModel } from '../common/models/SpeciesModel';
 import { CareLogModel } from '../common/models/CareLogModel';
 import { DiaryModel } from '../common/models/DiaryModel';
+import { UserProfileModel, DEFAULT_USER_PROFILE } from '../common/models/UserProfileModel';
 import { StorageService } from '../common/database/StorageService';
 import { ThemeManager } from '../theme/ThemeManager';
 import { DateUtil } from '../common/utils/DateUtil';
@@ -34,6 +35,11 @@ struct Index {
   @State careLogs: CareLogModel[] = [];
   @State diaries: DiaryModel[] = [];
   @State streakDays: number = 0;
+  @State userProfile: UserProfileModel = {
+    avatar: DEFAULT_USER_PROFILE.avatar,
+    nickname: DEFAULT_USER_PROFILE.nickname,
+    bio: DEFAULT_USER_PROFILE.bio
+  };
 
   // 主题与交互状态
   @State currentTabIndex: number = 0;
@@ -87,6 +93,7 @@ struct Index {
     this.speciesList = [...storage.getSpecies()];
     this.careLogs = [...storage.getCareLogs()];
     this.diaries = [...storage.getDiaries()];
+    this.userProfile = storage.getUserProfile();
 
     // 计算连续打卡
     const careDates = this.careLogs.map(l => l.date);
@@ -230,6 +237,7 @@ struct Index {
             careLogs: this.careLogs,
             diaries: this.diaries,
             streakDays: this.streakDays,
+            userProfile: this.userProfile,
             onChangeThemeMode: (m: string) => {
               this.handleChangeThemeMode(m);
             },

@@ -3,6 +3,7 @@ import { BadgeModel } from '../common/models/BadgeModel';
 import { DiaryModel } from '../common/models/DiaryModel';
 import { PlantModel } from '../common/models/PlantModel';
 import { CareLogModel } from '../common/models/CareLogModel';
+import { UserProfileModel, DEFAULT_USER_PROFILE } from '../common/models/UserProfileModel';
 import { BadgeEngine } from '../common/utils/BadgeEngine';
 import { GlassCard } from '../common/components/GlassCard';
 import { StatBadge } from '../common/components/StatBadge';
@@ -15,6 +16,11 @@ export struct ProfileTab {
   @Prop careLogs: CareLogModel[] = [];
   @Prop diaries: DiaryModel[] = [];
   @Prop streakDays: number = 0;
+  @Prop userProfile: UserProfileModel = {
+    avatar: DEFAULT_USER_PROFILE.avatar,
+    nickname: DEFAULT_USER_PROFILE.nickname,
+    bio: DEFAULT_USER_PROFILE.bio
+  };
 
   onChangeThemeMode?: (mode: string) => void;
   onOpenAddDiary?: () => void;
@@ -42,21 +48,44 @@ export struct ProfileTab {
           GlassCard({ isDark: this.isDark, radius: 24, paddingVal: 20 }) {
             Column({ space: 12 }) {
               Row({ space: 14 }) {
-                Text('🌸')
+                Text(this.userProfile.avatar || '🌸')
                   .fontSize(40)
                   .padding(10)
                   .borderRadius(20)
                   .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.15)' : '#FDF2E2')
+                  .onClick(() => {
+                    router.pushUrl({ url: 'pages/EditProfilePage' });
+                  })
 
                 Column({ space: 4 }) {
-                  Text('琉璃雅舍')
-                    .fontSize(20)
-                    .fontWeight(FontWeight.Bold)
-                    .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
+                  Row() {
+                    Text(this.userProfile.nickname || '琉璃雅舍')
+                      .fontSize(20)
+                      .fontWeight(FontWeight.Bold)
+                      .fontColor(this.isDark ? '#F2EFF9' : '#1F1B33')
+                      .maxLines(1)
+                      .textOverflow({ overflow: TextOverflow.Ellipsis })
+                      .layoutWeight(1)
 
-                  Text('一花一世界，一叶一菩提 · 单机绿意守护')
+                    Button('✏️ 编辑')
+                      .fontSize(12)
+                      .fontColor(this.isDark ? '#D4B87E' : '#A8874A')
+                      .backgroundColor(this.isDark ? 'rgba(212, 184, 126, 0.18)' : 'rgba(201, 169, 110, 0.15)')
+                      .borderRadius(14)
+                      .height(28)
+                      .padding({ left: 10, right: 10 })
+                      .onClick(() => {
+                        router.pushUrl({ url: 'pages/EditProfilePage' });
+                      })
+                  }
+                  .width('100%')
+                  .alignItems(VerticalAlign.Center)
+
+                  Text(this.userProfile.bio || '一花一世界，一叶一菩提 · 单机绿意守护')
                     .fontSize(12)
                     .fontColor(this.isDark ? '#A29DC0' : '#8E8AA3')
+                    .maxLines(2)
+                    .textOverflow({ overflow: TextOverflow.Ellipsis })
 
                   Row({ space: 6 }) {
                     StatBadge({ text: '完全离线', icon: '🔒', colorScheme: 'green', isDark: this.isDark })

@@ -4,6 +4,7 @@ import { PlantModel } from '../models/PlantModel';
 import { SpeciesModel } from '../models/SpeciesModel';
 import { CareLogModel } from '../models/CareLogModel';
 import { DiaryModel } from '../models/DiaryModel';
+import { UserProfileModel, DEFAULT_USER_PROFILE } from '../models/UserProfileModel';
 import {
   DEFAULT_SPECIES_LIST,
   DEFAULT_INITIAL_PLANTS,
@@ -19,6 +20,7 @@ export interface AppDataPayload {
   diaries: DiaryModel[];
   themeMode: string; // 'system' | 'light' | 'dark'
   hasAgreedPrivacy?: boolean;
+  userProfile?: UserProfileModel;
 }
 
 export class StorageService {
@@ -33,6 +35,11 @@ export class StorageService {
   private diaries: DiaryModel[] = [];
   private themeMode: string = 'system';
   private hasAgreedPrivacy: boolean = false;
+  private userProfile: UserProfileModel = {
+    avatar: DEFAULT_USER_PROFILE.avatar,
+    nickname: DEFAULT_USER_PROFILE.nickname,
+    bio: DEFAULT_USER_PROFILE.bio
+  };
   private isLoaded: boolean = false;
 
   private constructor() {}
@@ -74,6 +81,13 @@ export class StorageService {
               this.diaries = data.diaries || [];
               this.themeMode = data.themeMode || 'light';
               this.hasAgreedPrivacy = !!data.hasAgreedPrivacy;
+              if (data.userProfile) {
+                this.userProfile = {
+                  avatar: data.userProfile.avatar || DEFAULT_USER_PROFILE.avatar,
+                  nickname: data.userProfile.nickname || DEFAULT_USER_PROFILE.nickname,
+                  bio: data.userProfile.bio !== undefined ? data.userProfile.bio : DEFAULT_USER_PROFILE.bio
+                };
+              }
               loadedSuccessfully = true;
             }
           }
@@ -91,6 +105,11 @@ export class StorageService {
       this.diaries = JSON.parse(JSON.stringify(DEFAULT_INITIAL_DIARIES)) as DiaryModel[];
       this.themeMode = 'light';
       this.hasAgreedPrivacy = false;
+      this.userProfile = {
+        avatar: DEFAULT_USER_PROFILE.avatar,
+        nickname: DEFAULT_USER_PROFILE.nickname,
+        bio: DEFAULT_USER_PROFILE.bio
+      };
       this.saveToStorage();
     }
 
@@ -113,7 +132,8 @@ export class StorageService {
         careLogs: this.careLogs,
         diaries: this.diaries,
         themeMode: this.themeMode,
-        hasAgreedPrivacy: this.hasAgreedPrivacy
+        hasAgreedPrivacy: this.hasAgreedPrivacy,
+        userProfile: this.userProfile
       };
       const jsonStr = JSON.stringify(payload);
       const file = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE | fs.OpenMode.TRUNC);
@@ -230,6 +250,25 @@ export class StorageService {
     this.saveToStorage();
   }
 
+  // ============== 个人资料 (UserProfile) 操作 ==============
+
+  public getUserProfile(): UserProfileModel {
+    return {
+      avatar: this.userProfile.avatar || DEFAULT_USER_PROFILE.avatar,
+      nickname: this.userProfile.nickname || DEFAULT_USER_PROFILE.nickname,
+      bio: this.userProfile.bio !== undefined ? this.userProfile.bio : DEFAULT_USER_PROFILE.bio
+    };
+  }
+
+  public saveUserProfile(profile: UserProfileModel): void {
+    this.userProfile = {
+      avatar: profile.avatar || DEFAULT_USER_PROFILE.avatar,
+      nickname: profile.nickname.trim() || DEFAULT_USER_PROFILE.nickname,
+      bio: profile.bio !== undefined ? profile.bio.trim() : ''
+    };
+    this.saveToStorage();
+  }
+
   // ============== 主题与设置 ==============
 
   public getThemeMode(): string {
@@ -250,7 +289,9 @@ export class StorageService {
       species: this.species,
       careLogs: this.careLogs,
       diaries: this.diaries,
-      themeMode: this.themeMode
+      themeMode: this.themeMode,
+      hasAgreedPrivacy: this.hasAgreedPrivacy,
+      userProfile: this.userProfile
     };
     return JSON.stringify(payload, null, 2);
   }
@@ -266,6 +307,13 @@ export class StorageService {
         this.careLogs = Array.isArray(data.careLogs) ? data.careLogs : [];
         this.diaries = Array.isArray(data.diaries) ? data.diaries : [];
         this.themeMode = data.themeMode || 'system';
+        if (data.userProfile) {
+          this.userProfile = {
+            avatar: data.userProfile.avatar || DEFAULT_USER_PROFILE.avatar,
+            nickname: data.userProfile.nickname || DEFAULT_USER_PROFILE.nickname,
+            bio: data.userProfile.bio !== undefined ? data.userProfile.bio : DEFAULT_USER_PROFILE.bio
+          };
+        }
         this.saveToStorage();
         return true;
       }
@@ -280,6 +328,11 @@ export class StorageService {
     this.species = JSON.parse(JSON.stringify(DEFAULT_SPECIES_LIST)) as SpeciesModel[];
     this.careLogs = JSON.parse(JSON.stringify(DEFAULT_INITIAL_CARE_LOGS)) as CareLogModel[];
     this.diaries = JSON.parse(JSON.stringify(DEFAULT_INITIAL_DIARIES)) as DiaryModel[];
+    this.userProfile = {
+      avatar: DEFAULT_USER_PROFILE.avatar,
+      nickname: DEFAULT_USER_PROFILE.nickname,
+      bio: DEFAULT_USER_PROFILE.bio
+    };
     this.saveToStorage();
   }
 }

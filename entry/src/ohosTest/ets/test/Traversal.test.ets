@@ -1,5 +1,5 @@
 import { describe, beforeEach, it, expect } from '@ohos/hypium';
-import { exists, tap, waitFor, openApp, goto, backToTabs, sleep, shot, countText, logStep } from './UiDriver';
+import { exists, tap, waitFor, openApp, goto, backToTabs, sleep, shot, countText, logStep, typeInto } from './UiDriver';
 
 /** 全量可达性遍历：每个入口都要停留并断言锚点 */
 export default function traversalTest() {
@@ -251,6 +251,25 @@ export default function traversalTest() {
       await sleep(900);
       expect(await exists('琉璃雅舍')).assertTrue();
       await shot('TR-17_light_mode_restored');
+    });
+
+    it('TR-18_edit_profile_entry_and_save', 0, async () => {
+      logStep('TR-18 雅舍资料编辑：进入编辑界面、修改昵称与简介并保存');
+      await goto('雅舍');
+      expect(await waitFor('✏️ 编辑', 6000)).assertTrue();
+      await tap('✏️ 编辑');
+      expect(await waitFor('编辑雅舍资料', 6000)).assertTrue();
+      expect(await waitFor('🏡 雅舍头像', 6000)).assertTrue();
+      expect(await waitFor('🏷️ 雅舍昵称', 6000)).assertTrue();
+      await tap('🌷');
+      await sleep(300);
+      await typeInto('TextInput', 0, '青木花圃');
+      await sleep(300);
+      await typeInto('TextArea', 0, '草木有本心，静守岁月长');
+      await sleep(300);
+      expect(await tap('保存')).assertTrue();
+      expect(await waitFor('青木花圃', 6000)).assertTrue();
+      await shot('TR-18_profile_saved');
     });
   });
 }

@@ -10,6 +10,7 @@
     "pages/BackupRestorePage",
     "pages/DiaryDetailPage",
     "pages/PrivacyPolicyPage",
-    "pages/CareFootprintsPage"
+    "pages/CareFootprintsPage",
+    "pages/EditProfilePage"
   ]
 }
